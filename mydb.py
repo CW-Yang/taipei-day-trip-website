@@ -64,7 +64,7 @@ def get_attractions(page, keyword):
     result = []
     count = 0
 
-    if(keyword != ""):
+    if(keyword != None):
         value = ("%"+keyword+"%", )
         command = "SELECT COUNT(*) FROM attractions WHERE name LIKE %s"
         count = connect_with_database(command, value)[0][0]
