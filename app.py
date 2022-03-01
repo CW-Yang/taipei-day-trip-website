@@ -1,4 +1,3 @@
-from sys import prefix
 from flask import *
 from api import app2
 app=Flask(__name__)
@@ -21,4 +20,4 @@ def thankyou():
 
 app.register_blueprint(app2, url_prefix='/api')
 
-app.run(port=3000)
+app.run(port=3000, host='0.0.0.0')
