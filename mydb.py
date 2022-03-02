@@ -67,25 +67,32 @@ def get_attractions(page, keyword):
         value = ("%"+keyword+"%", )
         command = "SELECT COUNT(*) FROM attractions WHERE name LIKE %s"
         count = connect_with_database(command, value)[0][0]
-        if(count < 12):
-            nextPage = None
-            command = "SELECT * FROM attractions WHERE name LIKE %s"
-            data = connect_with_database(command, value)
-            for i in data:
-                result.append(data_formatting(i))
-
-        else:
-            start_index = (page*12)
-            end_index = 12*(page+1)
-            if(end_index > count):
-                end_index =  count
+        pages = int(count/12)+1
+        print(pages)
+        if(page < pages):
+            if(count < 12):
                 nextPage = None
-            value = ("%"+keyword+"%", start_index, end_index)
-            command = "SELECT * FROM attractions WHERE name LIKE %s ORDER BY id LIMIT %s,%s"
-            data = connect_with_database(command, value)
-            for i in data:
-                result.append(data_formatting(i))             
-    else:     
+                command = "SELECT * FROM attractions WHERE name LIKE %s"
+                data = connect_with_database(command, value)
+                for i in data:
+                    result.append(data_formatting(i))
+
+            else:
+                nextPage = page + 1
+                start_index = (page*12)
+                end_index = 12*(page+1)
+                if(end_index > count):
+                    end_index =  count
+                    nextPage = None
+                value = ("%"+keyword+"%", start_index, end_index)
+                command = "SELECT * FROM attractions WHERE name LIKE %s ORDER BY id LIMIT %s,%s"
+                data = connect_with_database(command, value)
+                for i in data:
+                    result.append(data_formatting(i))   
+        else:
+            nextPage = None          
+    else:
+        nextPage = page + 1     
         start_index = (page*12)+1
         end_index = ((page+1)*12)
 
