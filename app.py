@@ -1,7 +1,9 @@
 from flask import *
+from api import app2
 app=Flask(__name__)
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
+app.config["JSON_SORT_KEYS"] = False
 
 # Pages
 @app.route("/")
@@ -17,4 +19,6 @@ def booking():
 def thankyou():
 	return render_template("thankyou.html")
 
-app.run(port=3000)
+app.register_blueprint(app2, url_prefix='/api')
+
+app.run(port=3000, host='0.0.0.0')
