@@ -1,13 +1,10 @@
-from http.client import responses
-from unittest import result
-from click import command
 from mysql.connector.pooling import MySQLConnectionPool
 from mysql.connector import errors
 
 config = {
     "host":"localhost",
     "user":"root",
-    "password":"root",
+    "password":"K280529!a",
     "database":"website"
 }
 
