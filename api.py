@@ -22,7 +22,7 @@ def search_for_attraction_byId(attractionId):
     if(int(attractionId) > 0):
         response = get_attraction(int(attractionId))
     else:
-        message = "ArgsError: id number is positive"
+        message = "ArgsError: id number is positive and not zero"
         response = get_error_message(message)
     
     return response

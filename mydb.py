@@ -1,10 +1,11 @@
+from flask import jsonify
 from mysql.connector.pooling import MySQLConnectionPool
 from mysql.connector import errors
 
 config = {
     "host":"localhost",
     "user":"root",
-    "password":"K280529!a",
+    "password":"root",
     "database":"website"
 }
 
@@ -52,6 +53,7 @@ def data_formatting(data):
         "images":data[10].replace("[","").replace("]","").replace("\'", "").split(',')
         
     }
+    #print(result)
     return result
 
 # public function
@@ -103,23 +105,25 @@ def get_attractions(page, keyword):
         "data":result
     }
     #print(response)
+    response = jsonify(response)
     return response
 
 def get_attraction(id):
     value = (id, )
     command = "SELECT * FROM attractions WHERE number = %s"
     data = connect_with_database(command, value)
-    
     if(data != []):
+        result = data_formatting(data[0])
+        
         response = {
-            "data":data_formatting(data[0])
+            "data": result
         }
     else:
         response = {
             "error":True,
             "message":"The id number is over range"
         }
-    #print(response)
+    response = jsonify(response)
     return response
 
 def get_error_message(message):
@@ -127,4 +131,5 @@ def get_error_message(message):
         "error":True,
         "message":message
     }
+    response = jsonify(response)
     return response
