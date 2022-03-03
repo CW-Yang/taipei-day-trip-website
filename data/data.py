@@ -74,10 +74,10 @@ with open('taipei-attractions.json', encoding="UTF-8") as file:
         images = attraction['file']
 
         images = str(string_split(images))
-
+        print(images)
         my_tuple = (id, name, cat, description, address, transport, mrt, latitude, longitude, images)
-        bundle_up(my_tuple)
-    insert_data()
+        #bundle_up(my_tuple)
+    #insert_data()
     
     
 

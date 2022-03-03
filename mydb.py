@@ -5,7 +5,7 @@ from mysql.connector import errors
 config = {
     "host":"localhost",
     "user":"root",
-    "password":"K280529!a",
+    "password":"root",
     "database":"website"
 }
 
@@ -50,8 +50,7 @@ def data_formatting(data):
         "mrt":data[7],
         "latitude":data[8],
         "longitude":data[9],
-        "images":data[10].replace("[","").replace("]","").replace("\'", "").split(',')
-        
+        "images":eval(data[10])  
     }
     #print(result)
     return result
