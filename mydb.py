@@ -5,7 +5,7 @@ from mysql.connector import errors
 config = {
     "host":"localhost",
     "user":"root",
-    "password":"root",
+    "password":"K280529!a",
     "database":"website"
 }
 
