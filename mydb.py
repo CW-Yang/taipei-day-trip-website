@@ -67,7 +67,7 @@ def get_attractions(page, keyword):
         command = "SELECT COUNT(*) FROM attractions WHERE name LIKE %s"
         count = connect_with_database(command, value)[0][0]
         pages = int(count/12)+1
-        print(pages)
+        #print(pages)
         if(page < pages):
             if(count < 12):
                 nextPage = None
