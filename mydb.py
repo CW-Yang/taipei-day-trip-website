@@ -92,7 +92,7 @@ def get_attractions(page, keyword):
             nextPage = None          
     else:
         nextPage = page + 1     
-        start_index = (page*12)+1
+        start_index = (page*12) + 1
         end_index = ((page+1)*12)
 
         if(end_index > data_length):

@@ -1,13 +1,145 @@
+.sticky{
+    position: sticky;
+    top: 0px;
+}
 nav{
-    display: flexbox;
+    width:100%; height: 44px;
+    background-color: white;
+}
+section{
+    width: 100%;
+    height:320px;
+    background-image: url("welcome.png"), linear-gradient(#aaddee, #66aabb);
+    background-repeat:no-repeat no-repeat;
+    background-position: right bottom, left;
+    background-size: auto, auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+content{
+    margin: 0px auto;
+    width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.footer{
+    font-weight: 700;
+    width: 100%;
+    height: 104px;
+    background-color: #757575;
+    color: white;
+    text-align: center;
+    line-height: 104px;
+    margin-top: 50px;
+    margin-bottom: auto;
+}
+@font-face{
+    font-family: 'NotoSansTC-Regular';
+    src:url("NotoSansTC-Regular.otf")
+}
+.top-container{
+    margin: 0px auto;
+    display: flex;
+    width:1200px;
+    justify-content: center;
+    align-items: center;
 }
 .subject{
     color:#448899;
     font-size:30px;
-    font-weight: blod;
+    font-weight: bold;
+    margin-right: auto;
+    margin-left: 10px;
 }
-.top_btn{
-    background-color: transparent;
+.frame{
     font-size: 16px;
     color: #666666;
+    margin-right: 10px;
+}
+.slogan{
+    flex:none;
+    width: 1200px;
+    text-align: left;
+    margin: o auto;
+}
+.search{
+    display: flex;
+    align-items: center;
+}
+.attraction{
+    width: 270px;
+    height: 242px;
+    margin: 10px;
+    overflow: hidden;
+}
+.attraction img{
+    width: 100%;
+    height: 65%;
+    object-fit: cover;
+}
+.categoery{
+    width:auto;
+    text-align: right;
+}
+.content{
+    font-size: 16px;
+    color: #666666;
+    padding:3px;
+}
+.textbox{
+    width: 380px; height: 26px; border: none; padding: 10px; color: #666666; font-weight: bold; margin-left: 10px;
+
+}
+.search_btn{
+    width: 50px; height: 46px; background-color:#448899; border: none; margin-right: 0 auto; margin-right: 10px;
+}
+#name{
+    font-weight: bold;
+}
+#mrt{
+    width: 47%;
+    text-align: left;
+    display: inline-block;
+}
+#categoery{
+    width: 45%;
+    text-align: right;
+    display: inline-block;
+}
+@media (max-width:1200px){
+    .slogan{
+        text-align: center;
+    }
+    .search{
+        justify-content: center;
+    }
+    .top-container{
+        width:100%;
+    }
+    .slogan{
+        width:100%;
+    }
+    content{
+        width: 100%;
+    }
+    content>.attraction{
+    width:45%;
+    }
+}
+@media (max-width:600px){
+    section{
+        height: 280px;
+        background-size: 276px 148px, auto;
+        background-position: 148px bottom, left;
+    }
+    content>.attraction{
+    width:90%;
+    height: 280px;
+    }
+    .textbox{
+        width: 230px;
+    }
 }
