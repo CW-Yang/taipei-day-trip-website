@@ -87,6 +87,7 @@
                             url='/api/attractions?page='+ nextPage.toString()+'&keyword='+keyword;
                         }
                         setTimeout(debounce(url), 50);
+                        window.removeEventListener('wheel', mouseWheel);
                         }
                     }                     
                 }
