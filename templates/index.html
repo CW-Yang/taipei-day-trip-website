@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+        <title>首頁</title>
+        <!-- <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}"> -->
+        <style type="text/css">
+            nav{
+                width:auto; height: 54px;
+                margin-bottom: 10px;
+            }
+            section{
+                width: auto;
+                height:320px;
+                background-image: url("welcome.png"), linear-gradient(#aaddee, #66aabb);
+                /* background-image: url("welcome.png"); */
+                background-repeat:no-repeat no-repeat;
+                background-position: right, left;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            content{
+                margin: 0px auto;
+                width: 1200px;
+                height: auto;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .footer{
+                font-weight: 700;
+                width: 100%;
+                height: 104px;
+                background-color: #757575;
+                color: white;
+                text-align: center;
+                line-height: 104px;
+                margin-top: 50px;
+                margin-bottom: auto;
+            }
+            @font-face{
+                font-family: 'NotoSansTC-Regular';
+                src:url("NotoSansTC-Regular.otf")
+            }
+            .top-container{
+                margin: 0px auto;
+                display: flex;
+                width:1200px;
+                height: auto;
+                justify-content: center;
+                align-items: center;
+            }
+            .subject{
+                color:#448899;
+                font-size:30px;
+                font-weight: bold;
+                line-height:54px;
+                margin-right: auto;
+                margin-left: 10px;
+            }
+            .frame{
+                font-size: 16px;
+                color: #666666;
+                line-height: 54px;
+                margin: 10px;
+            }
+            .slogan{
+                flex:none;
+                width: 1200px;
+                text-align: left;
+                margin: o auto;
+            }
+            .search{
+                display: flex;
+                align-items: center;
+            }
+            .attraction{
+                width: 270px;
+                height: 242px;
+                margin: 15px;
+                background-color: aqua;
+                overflow: hidden;
+            }
+            .attraction img{
+                width: 100%;
+                height: 65%;
+                object-fit: cover;
+            }
+            .categoery{
+                width:auto;
+                text-align: right;
+            }
+            .content{
+                font-size: 16px;
+                color: #666666;
+                padding: 8px;
+            }
+            #name{
+                font-weight: bold;
+            }
+            #mrt{
+                width: 42%;
+                text-align: left;
+                display: inline-block;
+            }
+            #categoery{
+                width: 43%;
+                text-align: right;
+                display: inline-block;
+            }
+            @media (max-width:1200px){
+                .top-container{
+                    width:100%;
+                }
+                .slogan{
+                    width:100%;
+                }
+                content{
+                    width: 100%;
+                }
+                content>.attraction{
+                width:45%;
+                }
+            }
+            @media (max-width:600px){
+                .top-container{
+                    width:100%;
+                }
+                .slogan{
+                    width:100%;
+                }
+                content{
+                    width: 100%;
+                }
+                content>.attraction{
+                width:90%;
+                }
+            }
+           
+        </style>
+        <script>
+            window.addEventListener('scroll', scroll);
+            window.addEventListener('wheel', mouseWhell);
+
+            // infinite scrolling
+            function scroll(){
+                const scrollTop = document.documentElement.scrollTop;
+                const scrollHeight = document.documentElement.scrollHeight;
+                const clientHeight = document.documentElement.clientHeight;
+
+                // on the bottom
+                if(Math.trunc(scrollHeight-scrollTop) == Math.trunc(clientHeight)){
+                    debounce();
+                }
+            };
+
+            function debounce(){
+                //setTimeout(createElement(), 50);
+            };
+
+            function mouseWhell(){
+                
+            };
+
+            // Create Element
+            function createElement(){
+                let attractions  = document.getElementById("attractions");
+                let attraction, img, content;
+                let text = ["景點名稱", "捷運站", "分類"]
+
+                for(i=0; i<12; i++){
+                    // <div class="attraction" />
+                    attraction = document.createElement("div");
+                    attraction.classList.add("attraction");
+                    // <img src="" />
+                    img = document.createElement("img");
+                    img.src = "welcome.png";
+
+                    attraction.appendChild(img);
+                    console.log("add");
+                    for(j=0; j<3; j++){
+                        // <div class="content">
+                        content = document.createElement("div");
+                        content.classList.add("content");
+                        switch(j){
+                            case 0:
+                                content.setAttribute('id', 'name');
+                                
+                                break;
+                            case 1:
+                                content.setAttribute('id', 'mrt');
+                                break;
+                            case 2:
+                                content.setAttribute('id', 'categoery');
+                                break;
+                        }
+                        content.appendChild(document.createTextNode(text[j]));
+                        attraction.appendChild(content);
+                    }
+                    attractions.appendChild(attraction);
+                }
+            };
+            
+        </script>
+    </head>
+    <body style="margin: 0; font-family: NotoSansTC-Regular;">
+        <nav>
+            <div class="top-container">
+                <div class="subject">台北一日遊</div>
+                <div class="frame">預定行程</div>
+                <div class="frame">登入/註冊</div>
+            </div>     
+        </nav>
+        <section>
+            <div class="slogan">
+                <div style="color: white; font-size: 28px; font-weight: 700; line-height: 24px; margin-bottom: 20px;">輕鬆享受台北一日悠閒</div>
+                <div style="color: white; font-size: 16px; line-height: 13px; margin-bottom: 20px;">探索每個角落，體驗城市的深度旅遊行程</div>
+                <div class="search">
+                    <input style="width: 380px; height: 26px; border: none; padding: 10px; color: #666666; font-weight: bold;" value="輸入景點名稱查詢">
+                    <button style="width: 50px; height: 46px; background-color:#448899; border: none; margin-right: 0 auto;"><img src="icon_search.png"></button></input>
+                </div>
+            </div>         
+        </section>
+        <content id="attractions">
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+            <div class="attraction">
+                <img src="welcome.png" />
+                <div class="content" id="name">景點名稱</div>
+                <div class="content" id="mrt">捷運站</div>
+                <div class="content" id= "categoery">分類</div>
+            </div>
+        </content>
+        <div class="footer">COPYRIGHT &copy 2021 台北一日遊</div>
+    </body>
+</html>
