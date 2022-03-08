@@ -170,25 +170,23 @@
         </script>
     </head>
     <body style="margin: 0px; font-family: NotoSansTC-Regular;" onload="loaded();">
-        <div class="sticky">
-            <nav>
-                <div class="top-container">
-                    <div class="subject">台北一日遊</div>
-                    <div class="frame">預定行程</div>
-                    <div class="frame">登入/註冊</div>
-                </div>     
-            </nav>
-            <section>
-                <div class="slogan">
-                    <div style="color: white; font-size: 28px; font-weight: 700; line-height: 24px; margin-bottom: 20px;">輕鬆享受台北一日悠閒</div>
-                    <div style="color: white; font-size: 16px; line-height: 13px; margin-bottom: 20px;">探索每個角落，體驗城市的深度旅遊行程</div>
-                    <div class="search">
-                        <input class="textbox" value="請輸入景點名稱查詢" id="keyword" onclick="textboxFocused();"/>
-                        <button class="search_btn" onclick="searching()"><img src="{{ url_for('static', filename='icon_search.png') }}"></button></input>
-                    </div>
-                </div>         
-            </section>
-        </div>
+        <nav class="sticky">
+            <div class="top-container">
+                <div class="subject">台北一日遊</div>
+                <div class="frame">預定行程</div>
+                <div class="frame">登入/註冊</div>
+            </div>     
+        </nav>
+        <section>
+            <div class="slogan">
+                <div style="color: white; font-size: 28px; font-weight: 700; line-height: 24px; margin-bottom: 20px;">輕鬆享受台北一日悠閒</div>
+                <div style="color: white; font-size: 16px; line-height: 13px; margin-bottom: 20px;">探索每個角落，體驗城市的深度旅遊行程</div>
+                <div class="search">
+                    <input class="textbox" value="請輸入景點名稱查詢" id="keyword" onclick="textboxFocused();"/>
+                    <button class="search_btn" onclick="searching()"><img src="{{ url_for('static', filename='icon_search.png') }}"></button></input>
+                </div>
+            </div>         
+        </section>
         <content id="attractions">
         </content>
         <div class="footer">COPYRIGHT &copy 2021 台北一日遊</div>
