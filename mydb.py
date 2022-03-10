@@ -50,8 +50,7 @@ def data_formatting(data):
         "mrt":data[7],
         "latitude":data[8],
         "longitude":data[9],
-        "images":data[10].replace("[","").replace("]","").replace("\'", "").split(',')
-        
+        "images":eval(data[10])  
     }
     #print(result)
     return result
@@ -68,7 +67,7 @@ def get_attractions(page, keyword):
         command = "SELECT COUNT(*) FROM attractions WHERE name LIKE %s"
         count = connect_with_database(command, value)[0][0]
         pages = int(count/12)+1
-        print(pages)
+        #print(pages)
         if(page < pages):
             if(count < 12):
                 nextPage = None
@@ -93,7 +92,7 @@ def get_attractions(page, keyword):
             nextPage = None          
     else:
         nextPage = page + 1     
-        start_index = (page*12)+1
+        start_index = (page*12) + 1
         end_index = ((page+1)*12)
 
         if(end_index > data_length):

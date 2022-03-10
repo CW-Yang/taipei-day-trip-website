@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta charset="utf-8" />
+        <title>首頁</title>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+        <script>
+            let nextPage = null;
+            let keyword = null;
+
+            function loaded(){
+
+                window.addEventListener('wheel', mouseWheel);
+                window.addEventListener('scroll', scroll);
+
+                url="/api/attractions?page=0"
+                getAttractions(url);
+            };
+
+            async function getAttractions(url){
+
+                const response = await fetch(url);
+                const result = await response.json();
+                let count = result['data'].length;
+                
+                if(count != 0){
+                    let name = [];
+                    let mrt = [];
+                    let tag = [];
+                    let img = [];
+
+                    nextPage = result['nextPage'];
+
+                    for(i=0; i<count; i++){
+                        name.push(result['data'][i]['name']);
+                        mrt.push(result['data'][i]['mrt']);
+                        tag.push(result['data'][i]['category']);
+                        img.push(result['data'][i]['images'][0]);
+                    }
+                    data = [name, mrt, tag, img]
+                    createElement(data, count);
+                }
+                else{
+                    alert("無查詢結果");
+                }
+                
+            };
+            
+
+            // infinite scrolling
+            function scroll(){
+                const scrollTop = document.documentElement.scrollTop;
+                const scrollHeight = document.documentElement.scrollHeight;
+                const clientHeight = document.documentElement.clientHeight;
+
+                // on the bottom
+                if(scrollHeight-Math.trunc(scrollTop) == Math.trunc(clientHeight)){
+                    if(keyword == null){
+                        url='/api/attractions?page='+ nextPage.toString();
+                    }
+                    else{
+                        url='/api/attractions?page='+ nextPage.toString()+'&keyword='+keyword;
+                    }
+
+                    setTimeout(debounce(url), 50);
+                }
+            };
+
+            function debounce(url){
+                if(nextPage != null){
+                    getAttractions(url);
+                }  
+            };
+
+            function mouseWheel(e){
+                let direction = e.deltaY;
+                let screenWidth = screen.width;
+                if(screenWidth > 1200){
+                    if(nextPage == 1){
+                        if(direction > 0)
+                        {
+                        if(keyword == null){
+                            url='/api/attractions?page='+ nextPage.toString();
+                        }
+                        else{
+                            url='/api/attractions?page='+ nextPage.toString()+'&keyword='+keyword;
+                        }
+                        setTimeout(debounce(url), 50);
+                        window.removeEventListener('wheel', mouseWheel);
+                        }
+                    }                     
+                }
+                
+            };
+
+            function searching(){
+                let textbox = document.getElementById("keyword");
+                keyword = textbox.value;
+                if(textbox.value == ''){
+                    alert("請輸入關鍵字");
+                    keyword = null;
+                }
+                else if(textbox.value == '請輸入景點名稱查詢'){
+                    alert("請輸入關鍵字");
+                    keyword = null;
+                    textbox.select();
+                }
+                else{
+                    url = '/api/attractions?page=0&keyword='+keyword;
+                    nextPage = 0;
+                    removeElement();
+                    window.addEventListener('wheel', mouseWheel);
+                    setTimeout(debounce(url), 50);
+                }
+            };
+
+            function removeElement(){
+                let container = document.getElementById("attractions");
+                let child = container.lastElementChild;
+                while(child){
+                    container.removeChild(child);
+                    child = container.lastElementChild;
+                }
+            }
+
+            // Create Element
+            function createElement(data, count){
+                let attractions  = document.getElementById("attractions");
+                let attraction, img, content;
+
+                for(i=0; i<count; i++){
+                    // <div class="attraction" />
+                    attraction = document.createElement("div");
+                    attraction.classList.add("attraction");
+                    // <img src="" />
+                    img = document.createElement("img");
+                    img.src = data[3][i];
+
+                    attraction.appendChild(img);
+                    for(j=0; j<3; j++){
+                        // <div class="content">
+                        content = document.createElement("div");
+                        content.classList.add("content");
+                        switch(j){
+                            case 0:
+                                content.setAttribute('id', 'name');
+                                
+                                break;
+                            case 1:
+                                content.setAttribute('id', 'mrt');
+                                break;
+                            case 2:
+                                content.setAttribute('id', 'categoery');
+                                break;
+                        }
+                        content.appendChild(document.createTextNode(data[j][i]));
+                        attraction.appendChild(content);
+                    }
+                    attractions.appendChild(attraction);
+                }
+            };
+            function textboxFocused(){
+                let textbox = document.getElementById("keyword");
+                if(textbox.value == "請輸入景點名稱查詢"){
+                    textbox.value = '';
+                }
+            }
+            
+        </script>
+    </head>
+    <body style="margin: 0px; font-family: NotoSansTC-Regular;" onload="loaded();">
+        <nav class="sticky">
+            <div class="top-container">
+                <div class="subject">台北一日遊</div>
+                <div class="frame">預定行程</div>
+                <div class="frame">登入/註冊</div>
+            </div>     
+        </nav>
+        <section>
+            <div class="slogan">
+                <div style="color: white; font-size: 28px; font-weight: 700; line-height: 24px; margin-bottom: 20px;">輕鬆享受台北一日悠閒</div>
+                <div style="color: white; font-size: 16px; line-height: 13px; margin-bottom: 20px;">探索每個角落，體驗城市的深度旅遊行程</div>
+                <div class="search">
+                    <input class="textbox" value="請輸入景點名稱查詢" id="keyword" onclick="textboxFocused();"/>
+                    <button class="search_btn" onclick="searching()"><img src="{{ url_for('static', filename='icon_search.png') }}"></button></input>
+                </div>
+            </div>         
+        </section>
+        <content id="attractions">
+        </content>
+        <div class="footer">COPYRIGHT &copy 2021 台北一日遊</div>
+    </body>
+</html>
