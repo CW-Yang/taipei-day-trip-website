@@ -1,12 +1,19 @@
 from flask import jsonify
 from mysql.connector.pooling import MySQLConnectionPool
 from mysql.connector import errors
+import setting
+import os
+
+host_name = os.getenv('DB_HOST')
+user = os.getenv('DB_USER')
+password = os.getenv('DB_PASSWORD')
+database = os.getenv('DB_SCHEMA')
 
 config = {
-    "host":"localhost",
-    "user":"root",
-    "password":"K280529!a",
-    "database":"website"
+    "host":host_name,
+    "user":user,
+    "password":password,
+    "database":database
 }
 
 connection_pool = MySQLConnectionPool(pool_name='my_connection_pool',
