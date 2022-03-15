@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='attraction.css')}}">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+
+        <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+        <script>
+            let result;
+            let count = 0;
+            
+            function loaded(){
+                let string = location.href;
+                let length = string.length;
+                let id = string.charAt(length-1);
+
+                if(id == '?'){
+                    id = string.charAt(length-2);
+                }
+
+                let btn = document.getElementById("btn1");
+                btn.checked = true;
+
+                getAttraction(id);
+            }
+            async function getAttraction(id){
+                const url = '/api/attraction';
+                const param = id.toString();
+                const request = await fetch(`${url}/${param}`);
+                const response = await request.json();
+                result = response['data'];
+                showInfo();
+            }
+            function showInfo(){
+                let pictureBox = document.getElementById("pictureBox");
+                let name = document.getElementById("name");
+                let info = document.getElementById("info");
+                let description = document.getElementById("description");
+                let address = document.getElementById("address");
+                let transport = document.getElementById("transport");
+
+                let url = 'url('+result['images'][0]+')';
+                pictureBox.style.backgroundImage = url;
+                console.log(url);
+                // let img = document.getElementById("picture");
+            
+                // img.src = data['images'][0];
+
+                name.textContent = result['name'];
+                info.textContent = result['category'] + ' at ' + result['mrt'];
+                description.textContent = result['descripition'];
+                address.textContent = result['address'];
+                transport.textContent = result['transport'];
+            }
+
+            function select(time){
+
+                let fee = document.getElementById('fee');
+                let btn1 = document.getElementById('btn1');
+                let btn2 = document.getElementById('btn2');            
+               
+               if(time == 'morning')
+               {
+                    fee.textContent = "新台幣 2000 元";
+                    btn2.checked = false;
+               }
+               else{
+                    fee.textContent = "新台幣 2500 元";
+                    btn1.checked = false;
+               }
+            }
+            function changeImage(motion){
+                let pictureBox = document.getElementById("pictureBox");
+                let url;
+                let length = result['images'].length-1;
+
+                if(count > 0){
+                    if(motion == 'prev'){
+                        count--;
+                    }
+                    else{
+                        count++;
+                    }
+                }
+                else{
+                    if(motion == 'next'){
+                       
+                        count++;
+                    }
+                }
+
+                if(count <= length){
+                    url = 'url('+result['images'][count]+')';
+                    pictureBox.style.backgroundImage = url;
+                }
+                else{
+                    count = length;
+                }
+            }
+           
+        </script>
+    </head>
+    <body style="margin: 0px; font-family: NotoSansTC-Regular;" onload="loaded();">
+        <div class="container" style="display:flex; flex-wrap: wrap; width:auto; margin-left: auto; margin-right: auto; align-items: center; justify-content: center;">
+            <nav class="sticky" id="nav">
+                <div class="top-container">
+                    <div class="subject">台北一日遊</div>
+                    <div class="frame">預定行程</div>
+                    <div class="frame" onclick="signin();">登入/註冊</div>
+                </div>     
+            </nav>
+            <section>
+                <div id="pictureBox">
+                    <div style="display: flex; width: 100%; justify-content: space-between; padding: 15px;">
+                        <button class="pic_btn" id="left" onclick="changeImage('prev');"></button>
+                        <button class="pic_btn" id="right" onclick="changeImage('next');"></button>
+                    </div>
+                </div>
+                <div id="profile">
+                    <div id="name"></div>
+                    <div id="info"></div>
+                    <div id="booking-form">
+                        <div style="color: #666666; font-weight: 700; font-size: 16px; padding:20px;">訂購導覽行程</div>
+                        <div style="color: #666666; font-weight: 400; font-size: 16px; margin-bottom: 10px;; margin-left: 20px; margin-right: 20px;">以此景點為中心的一日行程，帶您探索城市角落故事</div>
+                        <div style="color: #666666; font-weight: 700; font-size: 16px; margin-bottom: 20px;; margin-left: 20px; display: inline-block;">選擇日期：</div>
+                        <input type="date" style="display: inline-block; width: 185px; height: 20px; font-size: 16px; border: none; padding: 8px;"/>
+                        <div style="display: flex;">
+                            <div style="color: #666666; font-weight: 700; font-size: 16px; margin-bottom: 20px;; margin-left: 20px; text-align: center;">選擇時間 :</div>
+                            <div style="text-align: center; display: flex;">
+                                <label style="display: flex;" onclick="select('morning');"><input type="radio" class="radio_btn" id="btn1" value="2000"></input><div style="color:#666666; font-size:16px;">上半天</div></label>
+                                <label style="display: flex;" onclick="select('afternoon');"><input type="radio" class="radio_btn" id="btn2" value="2500"></input><div style="color:#666666; font-size:16px;">下半天</div></label>
+                            </div>
+                        </div>
+                        <div style="color: #666666; font-weight: 700; font-size: 16px; margin-bottom: 20px;; margin-left: 20px; display: inline-block;">導覽費用：</div>
+                        <div id="fee">新台幣 2000 元</div>
+                        <div><button class="booking_confirm">開始預訂行程</button></div>
+                    </div>
+                </div>
+                <hr style="width: 100%; margin-top: 20px; margin-bottom: 10px;"/>
+                <div id="description"></div>
+                <div style="margin: 5px; width: 100%;">
+                    <div style="color: #666666; font-weight: 700; font-size: 16px; text-align: left; margin-left: 10px; margin-top: 10px; margin-bottom: 10px;">景點地址 :</div>
+                    <div id="address"></div>
+                    <div style="color: #666666; font-weight: 700; font-size: 16px; text-align: left; margin-left: 10px; margin-top: 20px; margin-bottom: 10px;">交通方式 :</div>
+                    <div id="transport"></div>
+                </div>
+            </section>
+        </div>
+        <div class="footer">COPYRIGHT &copy 2021 台北一日遊</div>
+    </body>
+</html>

@@ -5,9 +5,12 @@
         <meta charset="utf-8" />
         <title>首頁</title>
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
             let nextPage = null;
             let keyword = null;
+            let trigger = false;
+            let offset = 0;
 
             function loaded(){
 
@@ -44,10 +47,8 @@
                 else{
                     alert("無查詢結果");
                 }
-                
+                trigger = false;
             };
-            
-
             // infinite scrolling
             function scroll(){
                 const scrollTop = document.documentElement.scrollTop;
@@ -62,17 +63,17 @@
                     else{
                         url='/api/attractions?page='+ nextPage.toString()+'&keyword='+keyword;
                     }
-
-                    setTimeout(debounce(url), 50);
+                    debounce(url);
                 }
             };
-
             function debounce(url){
                 if(nextPage != null){
-                    getAttractions(url);
-                }  
+                    if(!trigger){
+                        getAttractions(url);
+                    }
+                }
+                trigger = true;  
             };
-
             function mouseWheel(e){
                 let direction = e.deltaY;
                 let screenWidth = screen.width;
@@ -86,14 +87,12 @@
                         else{
                             url='/api/attractions?page='+ nextPage.toString()+'&keyword='+keyword;
                         }
-                        setTimeout(debounce(url), 50);
+                        debounce(url);
                         window.removeEventListener('wheel', mouseWheel);
                         }
                     }                     
-                }
-                
+                }              
             };
-
             function searching(){
                 let textbox = document.getElementById("keyword");
                 keyword = textbox.value;
@@ -109,12 +108,12 @@
                 else{
                     url = '/api/attractions?page=0&keyword='+keyword;
                     nextPage = 0;
+                    offset = 0;
                     removeElement();
                     window.addEventListener('wheel', mouseWheel);
-                    setTimeout(debounce(url), 50);
+                    debounce(url);
                 }
             };
-
             function removeElement(){
                 let container = document.getElementById("attractions");
                 let child = container.lastElementChild;
@@ -122,21 +121,24 @@
                     container.removeChild(child);
                     child = container.lastElementChild;
                 }
-            }
-
+            };
             // Create Element
             function createElement(data, count){
                 let attractions  = document.getElementById("attractions");
-                let attraction, img, content;
+                let attraction, img, content, id;
 
                 for(i=0; i<count; i++){
                     // <div class="attraction" />
-                    attraction = document.createElement("div");
+                    attraction = document.createElement("form");
+                    id = document.createElement("div");
+                    id.classList.add("number");
+                    id.appendChild(document.createTextNode((offset*12)+(i+1)));
+                    attraction.setAttribute('id', 'attraction'+ ((offset*12)+i).toString());
+                    attraction.setAttribute('action', '/attraction/'+((offset*12)+(i+1)).toString());
                     attraction.classList.add("attraction");
                     // <img src="" />
                     img = document.createElement("img");
                     img.src = data[3][i];
-
                     attraction.appendChild(img);
                     for(j=0; j<3; j++){
                         // <div class="content">
@@ -145,7 +147,6 @@
                         switch(j){
                             case 0:
                                 content.setAttribute('id', 'name');
-                                
                                 break;
                             case 1:
                                 content.setAttribute('id', 'mrt');
@@ -156,25 +157,69 @@
                         }
                         content.appendChild(document.createTextNode(data[j][i]));
                         attraction.appendChild(content);
+                        attraction.appendChild(id);
                     }
                     attractions.appendChild(attraction);
                 }
+                offset = offset+1;
+                // JQuery 動態繫結    
+                $("#attractions").on('click', '.attraction', function(e){
+                    const obj = e.currentTarget;
+                    const id = obj.lastChild.textContent;
+                    // getAttraction(id);
+                    obj.submit();
+                })
             };
+            // async function getAttraction(id){
+            //     if(!trigger){
+            //         const url = '/api/attraction';
+            //         const param = id.toString();
+            //         const request = await fetch(`${url}/${param}`);
+            //         const response = request.json();
+            //         console.log(response);
+            //         trigger = false;
+            //     }
+            // }
             function textboxFocused(){
                 let textbox = document.getElementById("keyword");
                 if(textbox.value == "請輸入景點名稱查詢"){
                     textbox.value = '';
                 }
             }
-            
+            function signin(){
+                let nav = document.getElementById("nav");
+                let cover = document.getElementById("cover");
+                let menu = document.getElementById("menu");
+
+                nav.classList.remove("sticky");
+                cover.classList.add("cover");
+                menu.style.display = "block";
+            }
+            function closeMenu(){
+                let nav = document.getElementById("nav");
+                let cover = document.getElementById("cover");
+                let menu = document.getElementById("menu");
+
+                nav.classList.add("sticky");
+                cover.classList.remove("cover");
+                menu.style.display = "none";
+            }        
         </script>
     </head>
     <body style="margin: 0px; font-family: NotoSansTC-Regular;" onload="loaded();">
-        <nav class="sticky">
+        <div id="menu" class="menu">
+            <div class="member">登入會員帳號<button style="position: absolute; right:10px; width:20px; height: 20px; background-color: transparent; border: none;" onclick="closeMenu();"></button></div>
+            <div class="signin"><input value="輸入電子信箱"/></div>
+            <div class="signin"><input value="輸入密碼"/></div>
+            <div class="signin"><button>登入帳戶</button></div>
+            <div style="color:#666666; text-align: center; margin:5px;">還沒有帳戶？點此註冊</div>
+        </div>
+        <div id="cover"></div>
+        <nav class="sticky" id="nav">
             <div class="top-container">
                 <div class="subject">台北一日遊</div>
                 <div class="frame">預定行程</div>
-                <div class="frame">登入/註冊</div>
+                <div class="frame" onclick="signin();">登入/註冊</div>
             </div>     
         </nav>
         <section>

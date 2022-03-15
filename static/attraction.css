@@ -1,0 +1,174 @@
+.sticky{
+    position: sticky;
+    top: 0px;
+}
+nav{
+    width:100%; height: 44px;
+    background-color: white;
+    margin-bottom: 37px;
+}
+@font-face{
+    font-family: 'NotoSansTC-Regular';
+    src:url("NotoSansTC-Regular.otf")
+}
+.top-container{
+    margin: 0px auto;
+    display: flex;
+    width:1200px;
+    justify-content: center;
+    align-items: center;
+}
+.subject{
+    color:#448899;
+    font-size:30px;
+    font-weight: bold;
+    margin-right: auto;
+    margin-left: 10px;
+}
+.frame{
+    font-size: 16px;
+    color: #666666;
+    margin-right: 10px;
+}
+.radio_btn{
+    width: 22px; height: 22px; border-radius: 50%; border: none; background-color: #ffffff; margin-left: 18px; margin-right: 6px;
+}
+.radio_btn:checked{
+    accent-color: #448899;
+}
+
+#fee{
+    color: #666666;
+    font-size: 16px;
+    display: inline-block;
+}
+.booking_confirm{
+    width: 154px;
+    height: 36px;
+
+    margin-left: 20px;
+    text-align: center;
+
+    color: white;
+    font-size: 19px;
+    font-weight: 400;
+
+    background-color: #448899;
+    border: none;
+    border-radius: 8px;
+}
+#description{
+    margin: 10px;
+    color: #666666;
+    font-size: 16px;
+    font-weight: 400;
+}
+section{
+    display: flex;
+    width: 1200px;
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+}
+#pictureBox{
+    width: 540px;
+    height: 406px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#pictureBox> img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: flex;
+    
+}
+.pic_btn{
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    opacity: .5;
+    border: none;
+}
+
+#left{
+    background: url('btn_leftArrow.png');
+}
+#right{
+    background: url('btn_rightArrow.png');
+}
+#profile{
+    width: 600px;
+    height: auto;
+    margin: 15px;;
+}
+#name{
+    font-size: 24px;
+    font-weight: 700;
+    color: #666666;
+    margin-bottom: 15px;
+}
+#info{
+    font-size: 16px;
+    color: #666666;
+    margin-bottom: 20px;
+}
+#booking-form{
+    width:auto;
+    height: 302px;
+    background-color: #e8e8e8;
+    
+}
+#address{
+    margin-left: 10px;
+    color: #666666;
+    font-weight: 400;
+    font-size: 16px;
+}
+#transport{
+    margin-left: 10px;
+    color: #666666;
+    font-weight: 400;
+    font-size: 16px;
+}
+@media (max-width:1200px){
+    #pictureBox{
+        width: 600px;
+        
+    }
+    .top-container{
+        width:100%;
+    }
+    .container{
+        width:100%;
+        height: 100%;
+    }
+    nav{
+        width: 100%;
+    }
+    section{
+        width:100%;
+    }
+}
+.footer{
+    font-weight: 700;
+    width: 100%;
+    height: 104px;
+    background-color: #757575;
+    color: white;
+    text-align: center;
+    line-height: 104px;
+    margin-top: 50px;
+    margin-bottom: auto;
+}
+@media (max-width:600px){
+   #pictureBox{
+       background-size:cover;
+   }
+}

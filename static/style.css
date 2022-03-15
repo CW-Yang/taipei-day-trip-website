@@ -2,10 +2,59 @@
     position: sticky;
     top: 0px;
 }
+.cover{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(112, 112, 112, .5);
+}
+.number{
+    display: none;
+}
+.menu{
+    position: fixed;
+    top: 80px;
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 340px;
+    height: 275px;
+    background-color: white;
+    z-index: 1;
+    display: none;
+}
+.member{
+    text-align: center; margin: 10px; font-weight: 700; color:#666666; letter-spacing: 1px;
+    background-image: url("icon_close.png");
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+    background-position: right top;
+}
+.signin{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px;
+}
+.signin input{
+    width: 310px;
+    height: 47px;
+    border: solid 1px #666666;
+    color: #666666;
+}
+.signin button{
+    background-color: #448899;
+    color: white;
+    width: 310px;
+    height: 47px;
+    border: none;
+}
 nav{
     width:100%; height: 44px;
     background-color: white;
-    
 }
 section{
     width: 100%;
@@ -25,6 +74,7 @@ content{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
 }
 .footer{
     font-weight: 700;
@@ -64,7 +114,7 @@ content{
     flex:none;
     width: 1200px;
     text-align: left;
-    margin: o auto;
+    margin: 0 auto;
 }
 .search{
     display: flex;
@@ -74,6 +124,8 @@ content{
     width: 270px;
     height: 242px;
     margin: 10px;
+    background-color: transparent;
+    border: none;
     overflow: hidden;
 }
 .attraction img{
@@ -98,7 +150,9 @@ content{
     width: 50px; height: 46px; background-color:#448899; border: none; margin-right: 0 auto; margin-right: 10px;
 }
 #name{
+    margin-left: 10px;
     font-weight: bold;
+    text-align: left;
 }
 #mrt{
     width: 47%;
