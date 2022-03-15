@@ -16,11 +16,17 @@
             
             function loaded(){
                 let string = location.href;
-                let length = string.length;
-                let id = string.charAt(length-1);
+                let startIndex = string.search('n/')+2;
+                let endIndex = string.length - 1;
+                let id, str;
 
-                if(id == '?'){
-                    id = string.charAt(length-2);
+                if(string.charAt(endIndex) == '?'){
+                    str = string.substring(startIndex, endIndex);
+                    id = str;
+                }
+                else{
+                    str = string.substring(startIndex, endIndex+1);
+                    id = str;
                 }
 
                 let btn = document.getElementById("btn1");
