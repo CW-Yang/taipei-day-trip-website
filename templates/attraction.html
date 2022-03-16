@@ -49,19 +49,32 @@
                 let description = document.getElementById("description");
                 let address = document.getElementById("address");
                 let transport = document.getElementById("transport");
+                let radio_list = document.getElementById("radio_list");
+                
+
+                let count = result['images'].length;
+
+                for(let i = 0; i<count; i++){
+
+                    let radio_btn = document.createElement("input");
+
+                    radio_btn.setAttribute('type', 'radio');
+                    radio_btn.setAttribute('class', 'circle');
+                    radio_btn.setAttribute('id', 'circle'+i.toString())
+                    radio_list.appendChild(radio_btn);
+                }
 
                 let url = 'url('+result['images'][0]+')';
                 pictureBox.style.backgroundImage = url;
                 console.log(url);
-                // let img = document.getElementById("picture");
-            
-                // img.src = data['images'][0];
-
+                
                 name.textContent = result['name'];
                 info.textContent = result['category'] + ' at ' + result['mrt'];
                 description.textContent = result['descripition'];
                 address.textContent = result['address'];
                 transport.textContent = result['transport'];
+
+                radio_list.children[0].checked=true;
             }
 
             function select(time){
@@ -84,7 +97,11 @@
                 let pictureBox = document.getElementById("pictureBox");
                 let url;
                 let length = result['images'].length-1;
+                let current_id = "circle"+count.toString();
+                let radio_btn = document.getElementById(current_id);
 
+                radio_btn.checked = false;
+                
                 if(count > 0){
                     if(motion == 'prev'){
                         count--;
@@ -103,10 +120,14 @@
                 if(count <= length){
                     url = 'url('+result['images'][count]+')';
                     pictureBox.style.backgroundImage = url;
+                    current_id = "circle"+count.toString();
+                    radio_btn = document.getElementById(current_id);
+                    radio_btn.checked = true;
                 }
                 else{
                     count = length;
                 }
+                
             }
            
         </script>
@@ -122,9 +143,12 @@
             </nav>
             <section>
                 <div id="pictureBox">
-                    <div style="display: flex; width: 100%; justify-content: space-between; padding: 15px;">
+                    <div class="arrow_list">
                         <button class="pic_btn" id="left" onclick="changeImage('prev');"></button>
                         <button class="pic_btn" id="right" onclick="changeImage('next');"></button>
+                    </div>
+                    <div id="radio_list">
+                        <!-- <input type="radio" class="circle"/><input type="radio" class="circle"/><input type="radio" class="circle"/> -->
                     </div>
                 </div>
                 <div id="profile">
