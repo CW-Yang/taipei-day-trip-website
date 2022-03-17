@@ -7,10 +7,42 @@
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
-            let nextPage = null;
-            let keyword = null;
-            let trigger = false;
-            let offset = 0;
+
+            class AttractionsList{
+                constructor(){
+                    this.keyword = null;
+                    this.flag = false;
+                    this.offset = 0;
+                }
+                parse(data, page){
+                    this.length = data.length;
+                    this.nextPage = page;
+
+                    this.name = [];
+                    this.mrtStation = [];
+                    this.category = [];
+                    this.images = [];
+
+                    for(let i = 0; i < this.length; i++){
+                        this.name.push(data[i]['name']);
+                        this.mrtStation.push(data[i]['mrt']);
+                        this.category.push(data[i]['category']);
+                        this.images.push(data[i]['images']);
+                    }
+                }
+                test(){
+                    console.log(this.name);
+                    console.log(this.mrtStation);
+                    console.log(this.category);
+                    console.log(this.images);
+                    console.log(this.nextPage);
+                }
+                search(keyword){
+                    this.keyword = keyword;
+                }
+            }
+
+            let Attractions = new AttractionsList();
 
             function loaded(){
 
@@ -23,31 +55,17 @@
 
             async function getAttractions(url){
 
-                const response = await fetch(url);
-                const result = await response.json();
-                let count = result['data'].length;
-                
-                if(count != 0){
-                    let name = [];
-                    let mrt = [];
-                    let tag = [];
-                    let img = [];
-
-                    nextPage = result['nextPage'];
-
-                    for(i=0; i<count; i++){
-                        name.push(result['data'][i]['name']);
-                        mrt.push(result['data'][i]['mrt']);
-                        tag.push(result['data'][i]['category']);
-                        img.push(result['data'][i]['images'][0]);
-                    }
-                    data = [name, mrt, tag, img]
-                    createElement(data, count);
+                if(!Attractions.flag){
+                    Attractions.flag = true;
+                    const response = await fetch(url);
+                    const result = await response.json();
+                    let count = result['data'].length;
+                    let data = result['data'];
+                    let Page = result['nextPage'];
+                    Attractions.parse(data, Page);
+                    createElement();
+                    Attractions.flag = false;
                 }
-                else{
-                    alert("無查詢結果");
-                }
-                trigger = false;
             };
             // infinite scrolling
             function scroll(){
@@ -56,36 +74,35 @@
                 const clientHeight = document.documentElement.clientHeight;
 
                 // on the bottom
-                if(scrollHeight-Math.trunc(scrollTop) == Math.trunc(clientHeight)){
-                    if(keyword == null){
-                        url='/api/attractions?page='+ nextPage.toString();
+                if(scrollHeight-Math.trunc(scrollTop) - Math.trunc(clientHeight) <= 1){
+                    if(Attractions.keyword == null){
+                        url='/api/attractions?page='+ Attractions.nextPage;
                     }
                     else{
-                        url='/api/attractions?page='+ nextPage.toString()+'&keyword='+keyword;
+                        url='/api/attractions?page='+ Attractions.nextPage + '&keyword=' + Attractions.keyword;
                     }
                     debounce(url);
                 }
             };
+
             function debounce(url){
-                if(nextPage != null){
-                    if(!trigger){
-                        getAttractions(url);
-                    }
+                if(Attractions.nextPage != null){
+                    getAttractions(url);
                 }
-                trigger = true;  
             };
+
             function mouseWheel(e){
                 let direction = e.deltaY;
                 let screenWidth = screen.width;
                 if(screenWidth > 1200){
-                    if(nextPage == 1){
+                    if(Attractions.nextPage == 1){
                         if(direction > 0)
                         {
-                        if(keyword == null){
-                            url='/api/attractions?page='+ nextPage.toString();
+                        if(Attractions.keyword == null){
+                            url='/api/attractions?page='+ Attractions.nextPage;
                         }
                         else{
-                            url='/api/attractions?page='+ nextPage.toString()+'&keyword='+keyword;
+                            url='/api/attractions?page='+ Attractions.nextPage + '&keyword=' + Attractions.keyword;
                         }
                         debounce(url);
                         window.removeEventListener('wheel', mouseWheel);
@@ -95,24 +112,27 @@
             };
             function searching(){
                 let textbox = document.getElementById("keyword");
-                keyword = textbox.value;
+                Attractions.keyword = textbox.value;
+
                 if(textbox.value == ''){
                     alert("請輸入關鍵字");
-                    keyword = null;
+                    Attractions.keyword = null;
+
                 }
                 else if(textbox.value == '請輸入景點名稱查詢'){
                     alert("請輸入關鍵字");
-                    keyword = null;
                     textbox.select();
+                    Attractions.keyword = null;
                 }
                 else{
-                    url = '/api/attractions?page=0&keyword='+keyword;
-                    nextPage = 0;
-                    offset = 0;
+                    url = '/api/attractions?page=0&keyword='+Attractions.keyword;
+                    Attractions.nextPage = 0;
+                    Attractions.offset = 0;
                     removeElement();
                     window.addEventListener('wheel', mouseWheel);
                     debounce(url);
                 }
+                console.log(Attractions.keyword);
             };
             function removeElement(){
                 let container = document.getElementById("attractions");
@@ -123,22 +143,20 @@
                 }
             };
             // Create Element
-            function createElement(data, count){
+            function createElement(){
                 let attractions  = document.getElementById("attractions");
-                let attraction, img, content, id;
+                let attraction, img, content, link;
 
-                for(i=0; i<count; i++){
+                for(i=0; i<Attractions.length; i++){
                     // <div class="attraction" />
-                    attraction = document.createElement("form");
-                    id = document.createElement("div");
-                    id.classList.add("number");
-                    id.appendChild(document.createTextNode((offset*12)+(i+1)));
-                    attraction.setAttribute('id', 'attraction'+ ((offset*12)+i).toString());
-                    attraction.setAttribute('action', '/attraction/'+((offset*12)+(i+1)).toString());
+                    attraction = document.createElement("div");
+                    link = document.createElement("a");
+                    link.setAttribute('href', '/attraction/'+ ((Attractions.offset*12)+i+1).toString());
+                    link.setAttribute('style', 'text-decoration:none');
                     attraction.classList.add("attraction");
                     // <img src="" />
                     img = document.createElement("img");
-                    img.src = data[3][i];
+                    img.src = Attractions.images[i][0];
                     attraction.appendChild(img);
                     for(j=0; j<3; j++){
                         // <div class="content">
@@ -147,39 +165,32 @@
                         switch(j){
                             case 0:
                                 content.setAttribute('id', 'name');
+                                content.appendChild(document.createTextNode(Attractions.name[i]));
                                 break;
                             case 1:
                                 content.setAttribute('id', 'mrt');
+                                content.appendChild(document.createTextNode(Attractions.mrtStation[i]));
                                 break;
                             case 2:
                                 content.setAttribute('id', 'categoery');
+                                content.appendChild(document.createTextNode(Attractions.category[i]));
                                 break;
                         }
-                        content.appendChild(document.createTextNode(data[j][i]));
                         attraction.appendChild(content);
-                        attraction.appendChild(id);
                     }
-                    attractions.appendChild(attraction);
+                    link.appendChild(attraction);
+                    attractions.appendChild(link);
                 }
-                offset = offset+1;
+                Attractions.offset++;
                 // JQuery 動態繫結    
                 $("#attractions").on('click', '.attraction', function(e){
-                    const obj = e.currentTarget;
-                    const id = obj.lastChild.textContent;
-                    // getAttraction(id);
-                    obj.submit();
+                    // const obj = e.currentTarget;
+                    // const id = obj.lastChild.textContent;
+
+                    // obj.submit();
                 })
             };
-            // async function getAttraction(id){
-            //     if(!trigger){
-            //         const url = '/api/attraction';
-            //         const param = id.toString();
-            //         const request = await fetch(`${url}/${param}`);
-            //         const response = request.json();
-            //         console.log(response);
-            //         trigger = false;
-            //     }
-            // }
+         
             function textboxFocused(){
                 let textbox = document.getElementById("keyword");
                 if(textbox.value == "請輸入景點名稱查詢"){
