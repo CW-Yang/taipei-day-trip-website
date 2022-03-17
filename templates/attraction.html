@@ -11,36 +11,65 @@
         <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
         <script>
+            class Attraction{
+                constructor(){
 
-            let result;
-            let count = 0;
-            
+                }
+                getInfo(data){
+                    this.name = data['name'];
+                    this.mrtStation = data['mrt'];
+                    this.category = data['category'];
+                    this.address = data['address'];
+                    this.transport = data['transport'];
+                    this.description = data['descripition'];
+                    this.images = [];
+                    this.dataLength = data.length;
+                    this.imageLength = data['images'].length;
+
+                    for(let i = 0; i < this.imageLength; i++){
+                        this.images.push(data['images'][i]);
+                    }
+                }
+            }
+            class Button{
+                constructor(){
+                    this.clickCount = 0;
+                }
+                bind(left, right){
+                    this.left = left;
+                    this.right = right;
+                }
+            }
+
+            let MyAttraction = new Attraction();
+            let MyButton = new Button();   
+            let ArrowButton = new Button(); 
+
             function loaded(){
                 let string = location.href;
                 let startIndex = string.search('n/')+2;
-                let endIndex = string.length - 1;
+                let endIndex = string.length;
                 let id, str;
 
-                if(string.charAt(endIndex) == '?'){
-                    str = string.substring(startIndex, endIndex);
-                    id = str;
-                }
-                else{
-                    str = string.substring(startIndex, endIndex+1);
-                    id = str;
-                }
-
+                str = string.substring(startIndex, endIndex);
+                id = str;
+        
                 let btn = document.getElementById("btn1");
                 btn.checked = true;
 
                 getAttraction(id);
+
+                MyButton.bind(document.getElementById('left'), document.getElementById('right'));
+                ArrowButton.bind(document.getElementById('btn1'), document.getElementById('btn2'));
             }
             async function getAttraction(id){
                 const url = '/api/attraction';
                 const param = id.toString();
                 const request = await fetch(`${url}/${param}`);
                 const response = await request.json();
-                result = response['data'];
+
+                MyAttraction.getInfo(response['data']);
+
                 showInfo();
             }
             function showInfo(){
@@ -51,11 +80,8 @@
                 let address = document.getElementById("address");
                 let transport = document.getElementById("transport");
                 let radio_list = document.getElementById("radio_list");
-                
 
-                let count = result['images'].length;
-
-                for(let i = 0; i<count; i++){
+                for(let i = 0; i<MyAttraction.imageLength; i++){
 
                     let radio_btn = document.createElement("input");
 
@@ -65,68 +91,62 @@
                     radio_list.appendChild(radio_btn);
                 }
 
-                let url = 'url('+result['images'][0]+')';
+                let url = 'url('+MyAttraction.images[0]+')';
                 pictureBox.style.backgroundImage = url;
-                console.log(url);
                 
-                name.textContent = result['name'];
-                info.textContent = result['category'] + ' at ' + result['mrt'];
-                description.textContent = result['descripition'];
-                address.textContent = result['address'];
-                transport.textContent = result['transport'];
+                name.textContent = MyAttraction.name;
+                info.textContent = MyAttraction.category + ' at ' + MyAttraction.mrtStation;
+                description.textContent = MyAttraction.description;
+                address.textContent = MyAttraction.address;
+                transport.textContent = MyAttraction.transport;
 
                 radio_list.children[0].checked=true;
             }
 
             function select(time){
-
-                let fee = document.getElementById('fee');
-                let btn1 = document.getElementById('btn1');
-                let btn2 = document.getElementById('btn2');            
-               
-               if(time == 'morning')
-               {
+                let fee = document.getElementById('fee'); 
+                if(time == 'morning')
+                {
                     fee.textContent = "新台幣 2000 元";
-                    btn2.checked = false;
-               }
-               else{
+                    ArrowButton.right.checked = false;                  
+                }
+                else{
                     fee.textContent = "新台幣 2500 元";
-                    btn1.checked = false;
-               }
+                    ArrowButton.left.checked = false;    
+                }
             }
-            function changeImage(motion){
+            function changeImage(action){
                 let pictureBox = document.getElementById("pictureBox");
                 let url;
-                let length = result['images'].length-1;
-                let current_id = "circle"+count.toString();
-                let radio_btn = document.getElementById(current_id);
+                let length = MyAttraction.imageLength-1;
+                // let current_id = "circle"+ArrowButton.clickCount;
+                let radio_btn = document.getElementById('radio_list').children[MyButton.clickCount];
 
                 radio_btn.checked = false;
                 
-                if(count > 0){
-                    if(motion == 'prev'){
-                        count--;
+                if(MyButton.clickCount > 0){
+                    if(action == 'prev'){
+                        MyButton.clickCount--;
                     }
                     else{
-                        count++;
+                        MyButton.clickCount++;
                     }
                 }
                 else{
-                    if(motion == 'next'){
+                    if(action == 'next'){
                        
-                        count++;
+                        MyButton.clickCount++;
                     }
                 }
 
-                if(count <= length){
-                    url = 'url('+result['images'][count]+')';
+                if(MyButton.clickCount <= length){
+                    url = 'url('+MyAttraction.images[MyButton.clickCount]+')';
                     pictureBox.style.backgroundImage = url;
-                    current_id = "circle"+count.toString();
-                    radio_btn = document.getElementById(current_id);
+                    radio_btn = document.getElementById('radio_list').children[MyButton.clickCount];
                     radio_btn.checked = true;
                 }
                 else{
-                    count = length;
+                    MyButton.clickCount = length;
                     radio_btn.checked = true;
                 }
                 
@@ -164,8 +184,8 @@
                         <div style="display: flex;">
                             <div style="color: #666666; font-weight: 700; font-size: 16px; margin-bottom: 20px;; margin-left: 20px; text-align: center;">選擇時間 :</div>
                             <div style="text-align: center; display: flex;">
-                                <label style="display: flex;" onclick="select('morning');"><input type="radio" class="radio_btn" id="btn1" value="2000"></input><div style="color:#666666; font-size:16px;">上半天</div></label>
-                                <label style="display: flex;" onclick="select('afternoon');"><input type="radio" class="radio_btn" id="btn2" value="2500"></input><div style="color:#666666; font-size:16px;">下半天</div></label>
+                                <label  id="left_btn" style="display: flex;" onclick="select('morning')"><input type="radio" class="radio_btn" value="2000" id="btn1"></input><div style="color:#666666; font-size:16px;">上半天</div></label>
+                                <label  id="right_btn" style="display: flex;" onclick="select('afternoon')"><input type="radio" class="radio_btn" id="btn2" value="2500"></input><div style="color:#666666; font-size:16px;">下半天</div></label>
                             </div>
                         </div>
                         <div style="color: #666666; font-weight: 700; font-size: 16px; margin-bottom: 20px;; margin-left: 20px; display: inline-block;">導覽費用：</div>

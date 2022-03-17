@@ -7,7 +7,6 @@
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
-
             class AttractionsList{
                 constructor(){
                     this.keyword = null;
@@ -62,8 +61,13 @@
                     let count = result['data'].length;
                     let data = result['data'];
                     let Page = result['nextPage'];
-                    Attractions.parse(data, Page);
-                    createElement();
+                    if(count > 0){
+                        Attractions.parse(data, Page);
+                        createElement();
+                    }
+                    else{
+                        alert("無相關結果");
+                    }
                     Attractions.flag = false;
                 }
             };
@@ -183,12 +187,12 @@
                 }
                 Attractions.offset++;
                 // JQuery 動態繫結    
-                $("#attractions").on('click', '.attraction', function(e){
-                    // const obj = e.currentTarget;
-                    // const id = obj.lastChild.textContent;
+                // $("#attractions").on('click', '.attraction', function(e){
+                //     // const obj = e.currentTarget;
+                //     // const id = obj.lastChild.textContent;
 
-                    // obj.submit();
-                })
+                //     // obj.submit();
+                // })
             };
          
             function textboxFocused(){
