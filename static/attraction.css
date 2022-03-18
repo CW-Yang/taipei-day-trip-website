@@ -1,6 +1,15 @@
-.sticky{
-    position: sticky;
-    top: 0px;
+.attraction{
+    margin: 0px; 
+    font-family: NotoSansTC-Regular;
+}
+.container{
+    display:flex; 
+    flex-wrap: wrap; 
+    width:auto; 
+    margin-left: auto; 
+    margin-right: auto; 
+    align-items: center; 
+    justify-content: center;
 }
 nav{
     width:100%; height: 44px;
@@ -8,9 +17,9 @@ nav{
     z-index: 1;
     margin-bottom: 37px;
 }
-@font-face{
-    font-family: 'NotoSansTC-Regular';
-    src:url("NotoSansTC-Regular.otf")
+nav>.sticky{
+    position: sticky;
+    top: 0px;
 }
 .top-container{
     margin: 0px auto;
@@ -31,16 +40,111 @@ nav{
     color: #666666;
     margin-right: 10px;
 }
-.radio_btn{
-    width: 22px; height: 22px; border-radius: 50%; border: none; background-color: #ffffff; margin-left: 18px; margin-right: 6px;
-}
-.radio_btn:checked{
-    accent-color: #448899;
-}
 
-#fee{
+section{
+    display: flex;
+    width: 1200px;
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+}
+section>#pictureBox{
+    position: relative;
+    width:560px;
+    height: 406px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+#profile{
+    width: 600px;
+    height: auto;
+    margin: 15px;;
+}
+section>.parting-line{
+    width: 100%; 
+    margin-top: 20px; 
+    margin-bottom: 10px;
+}
+section>#description{
+    margin: 10px;
     color: #666666;
     font-size: 16px;
+    font-weight: 400;
+}
+section>.content{
+    margin: 5px; 
+    width: 100%;
+}
+#pictureBox>.arrow_list{
+    display: flex; width: 100%; justify-content: space-between; padding: 15px;
+}
+#pictureBox> #radio_list{
+    position:absolute; bottom:0px;
+}
+
+#profile>#name{
+    font-size: 24px;
+    font-weight: 700;
+    color: #666666;
+    margin-bottom: 15px;
+}
+#profile>#info{
+    font-size: 16px;
+    color: #666666;
+    margin-bottom: 20px;
+}
+#profile>#booking-form{
+    width:auto;
+    height: 302px;
+    background-color: #e8e8e8;
+}
+
+#booking-form>.booking-title{
+    color: #666666; 
+    font-weight: 700; 
+    font-size: 16px; 
+    padding:20px;
+}
+#booking-form>.booking-intro{
+    color: #666666; 
+    font-weight: 400; 
+    font-size: 16px; 
+    margin-bottom: 10px; 
+    margin-left: 20px; 
+    margin-right: 20px;
+}
+#booking-form>.booking-date{
+    color: #666666; 
+    font-weight: 700; 
+    font-size: 16px; 
+    margin-bottom: 20px; 
+    margin-left: 20px; 
+    display: inline-block;
+}
+#booking-form>.date{
+    display: inline-block; 
+    width: 185px; 
+    height: 20px; 
+    font-size: 16px; 
+    border: none; 
+    padding: 8px;
+}
+.charge{
+    display: flex;
+}
+.toll{
+    color: #666666; 
+    font-weight: 700; 
+    font-size: 16px; 
+    margin-bottom: 20px; 
+    margin-left: 20px; 
     display: inline-block;
 }
 .booking_confirm{
@@ -58,48 +162,56 @@ nav{
     border: none;
     border-radius: 8px;
 }
-#description{
-    margin: 10px;
+#booking-form>#fee{
     color: #666666;
     font-size: 16px;
+    display: inline-block;
+}
+.charge>.time{
+    color: #666666; 
+    font-weight: 700; 
+    font-size: 16px; 
+    margin-bottom: 20px; 
+    margin-left: 20px; 
+    text-align: center;
+}
+.charge>.radio-options{
+    display: flex;
+    text-align: center; 
+}
+
+.content>.address-title{
+    color: #666666; 
+    font-weight: 700; 
+    font-size: 16px; 
+    text-align: left; 
+    margin-left: 10px; 
+    margin-top: 10px; 
+    margin-bottom: 10px;
+}
+.content>#address{
+    margin-left: 10px;
+    color: #666666;
     font-weight: 400;
+    font-size: 16px;
 }
-section{
-    display: flex;
-    width: 1200px;
-    height: auto;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    margin: 10px;
+.content>.transport-title{
+    color: #666666; 
+    font-weight: 700; 
+    font-size: 16px; 
+    text-align: left; 
+    margin-left: 10px; 
+    margin-top: 20px; 
+    margin-bottom: 10px;
 }
-#pictureBox{
-    position: relative;
-    width: 540px;
-    height: 406px;
-    background-repeat: no-repeat;
-    background-size: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+
+.radio_btn{
+    width: 22px; height: 22px; border-radius: 50%; border: none; background-color: #ffffff; margin-left: 18px; margin-right: 6px;
 }
-#pictureBox> .arrow_list{
-    display: flex; width: 100%; justify-content: space-between; padding: 15px;
+.radio_btn:checked{
+    accent-color: #448899;
 }
-#pictureBox> .circle{
-    margin: 15px;
-    width: 12px;
-    height: 12px;
-    border: none;
-}
-#pictureBox> #radio_list{
-    position:absolute; bottom:0px;
-}
-.circle:checked{
-    accent-color: #000000;
-}
+
 .pic_btn{
     width: 36px;
     height: 36px;
@@ -108,45 +220,31 @@ section{
     border: none;
 }
 
-#left{
+.arrow_list>#left{
     background: url('btn_leftArrow.png');
 }
-#right{
+.arrow_list>#right{
     background: url('btn_rightArrow.png');
 }
-#profile{
-    width: 600px;
-    height: auto;
-    margin: 15px;;
+.circle{
+    margin: 15px;
+    width: 15px;
+    height: 15px;
+    border: none;
 }
-#name{
-    font-size: 24px;
-    font-weight: 700;
-    color: #666666;
-    margin-bottom: 15px;
+.circle:checked{
+    accent-color: #666666;
 }
-#info{
-    font-size: 16px;
-    color: #666666;
-    margin-bottom: 20px;
-}
-#booking-form{
-    width:auto;
-    height: 302px;
-    background-color: #e8e8e8;
-    
-}
-#address{
-    margin-left: 10px;
-    color: #666666;
-    font-weight: 400;
-    font-size: 16px;
-}
+
 #transport{
     margin-left: 10px;
     color: #666666;
     font-weight: 400;
     font-size: 16px;
+}
+@font-face{
+    font-family: 'NotoSansTC-Regular';
+    src:url("NotoSansTC-Regular.otf")
 }
 @media (max-width:1200px){
     #pictureBox{

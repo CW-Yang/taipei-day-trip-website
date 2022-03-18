@@ -16,17 +16,36 @@
                 parse(data, page){
                     this.length = data.length;
                     this.nextPage = page;
-
                     this.name = [];
                     this.mrtStation = [];
                     this.category = [];
                     this.images = [];
 
                     for(let i = 0; i < this.length; i++){
-                        this.name.push(data[i]['name']);
-                        this.mrtStation.push(data[i]['mrt']);
-                        this.category.push(data[i]['category']);
-                        this.images.push(data[i]['images']);
+                        if(data[i]['name'] != 'null'){
+                            this.name.push(data[i]['name']);
+                        }
+                        else{
+                            this.name.push('')
+                        }
+                        if(data[i]['mrt'] != 'null'){
+                            this.mrtStation.push(data[i]['mrt']);;
+                        }
+                        else{
+                            this.mrtStation.push('')
+                        }
+                        if(data[i]['category'] != 'null'){
+                            this.category.push(data[i]['category']);
+                        }
+                        else{
+                            this.category.push('');
+                        }
+                        if(data[i]['category'] != 'null'){
+                            this.images.push(data[i]['images']);
+                        }
+                        else{
+                            this.images.push('');
+                        }
                     }
                 }
                 test(){
@@ -61,6 +80,7 @@
                     let count = result['data'].length;
                     let data = result['data'];
                     let Page = result['nextPage'];
+                    
                     if(count > 0){
                         Attractions.parse(data, Page);
                         createElement();
@@ -94,7 +114,6 @@
                     getAttractions(url);
                 }
             };
-
             function mouseWheel(e){
                 let direction = e.deltaY;
                 let screenWidth = screen.width;
@@ -169,15 +188,18 @@
                         switch(j){
                             case 0:
                                 content.setAttribute('id', 'name');
-                                content.appendChild(document.createTextNode(Attractions.name[i]));
+                                // content.appendChild(document.createTextNode(Attractions.name[i]));
+                                content.textContent = Attractions.name[i];
                                 break;
                             case 1:
                                 content.setAttribute('id', 'mrt');
-                                content.appendChild(document.createTextNode(Attractions.mrtStation[i]));
+                                // content.appendChild(document.createTextNode(Attractions.mrtStation[i]));
+                                content.textContent = Attractions.mrtStation[i];
                                 break;
                             case 2:
                                 content.setAttribute('id', 'categoery');
                                 content.appendChild(document.createTextNode(Attractions.category[i]));
+                                // content.textContent = Attractions.mrtStation[i];
                                 break;
                         }
                         attraction.appendChild(content);
@@ -186,15 +208,7 @@
                     attractions.appendChild(link);
                 }
                 Attractions.offset++;
-                // JQuery 動態繫結    
-                // $("#attractions").on('click', '.attraction', function(e){
-                //     // const obj = e.currentTarget;
-                //     // const id = obj.lastChild.textContent;
-
-                //     // obj.submit();
-                // })
             };
-         
             function textboxFocused(){
                 let textbox = document.getElementById("keyword");
                 if(textbox.value == "請輸入景點名稱查詢"){
