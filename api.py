@@ -1,8 +1,10 @@
-from flask import Blueprint, request
+from flask import Blueprint, redirect, request, url_for
 from mydb import get_attraction, get_attractions, get_error_message
 
 app2 = Blueprint('app2', __name__)
 
+def go():
+    return url_for('show_attractions')
 
 @app2.route('/attractions')
 def show_attractions():

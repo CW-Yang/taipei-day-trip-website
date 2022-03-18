@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='attraction.css')}}">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+
+        <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+        <script>
+
+            class Attraction{
+                constructor(){}
+                getInfo(data){
+                    this.name = data['name'];
+                    this.mrtStation = data['mrt'];
+                    this.category = data['category'];
+                    this.address = data['address'];
+                    this.transport = data['transport'];
+                    this.description = data['descripition'];
+                    this.images = [];
+                    this.dataLength = data.length;
+                    this.imageLength = data['images'].length;
+
+                    for(let i = 0; i < this.imageLength; i++){
+                        this.images.push(data['images'][i]);
+                    }
+                }
+            }
+
+            class Button{
+                constructor(){
+                    this.clickCount = 0;
+                }
+                bind(left, right){
+                    this.left = left;
+                    this.right = right;
+                }
+            }
+
+            let MyAttraction = new Attraction();
+            let MyButton = new Button();   
+            let ArrowButton = new Button(); 
+
+            function loaded(){
+                let string = location.href;
+                let startIndex = string.search('n/')+2;
+                let endIndex = string.length;
+                let id, str;
+
+                str = string.substring(startIndex, endIndex);
+                id = str;
+        
+                let btn = document.getElementById("btn1");
+                btn.checked = true;
+
+                getAttraction(id);
+
+                MyButton.bind(document.getElementById('left'), document.getElementById('right'));
+                ArrowButton.bind(document.getElementById('btn1'), document.getElementById('btn2'));
+            }
+
+            async function getAttraction(id){
+                const url = '/api/attraction';
+                const param = id.toString();
+                const request = await fetch(`${url}/${param}`);
+                const response = await request.json();
+                MyAttraction.getInfo(response['data']);
+
+                showInfo();
+            }
+
+            function showInfo(){
+                let pictureBox = document.getElementById("pictureBox");
+                let name = document.getElementById("name");
+                let info = document.getElementById("info");
+                let description = document.getElementById("description");
+                let address = document.getElementById("address");
+                let transport = document.getElementById("transport");
+                let radio_list = document.getElementById("radio_list");
+
+                for(let i = 0; i<MyAttraction.imageLength; i++){
+
+                    let radio_btn = document.createElement("input");
+
+                    radio_btn.setAttribute('type', 'radio');
+                    radio_btn.setAttribute('class', 'circle');
+                    radio_btn.setAttribute('id', 'circle'+i.toString())
+                    radio_list.appendChild(radio_btn);
+                }
+
+                let url = 'url('+MyAttraction.images[0]+')';
+                pictureBox.style.backgroundImage = url;
+                
+                name.textContent = MyAttraction.name;
+                info.textContent = MyAttraction.category + ' at ' + MyAttraction.mrtStation;
+                description.textContent = MyAttraction.description;
+                address.textContent = MyAttraction.address;
+                transport.textContent = MyAttraction.transport;
+
+                radio_list.children[0].checked=true;
+            }
+
+            function select(time){
+                let fee = document.getElementById('fee'); 
+                if(time == 'morning')
+                {
+                    fee.textContent = "新台幣 2000 元";
+                    ArrowButton.right.checked = false;                  
+                }
+                else{
+                    fee.textContent = "新台幣 2500 元";
+                    ArrowButton.left.checked = false;    
+                }
+            }
+
+            function changeImage(action){
+                
+                let pictureBox = document.getElementById("pictureBox");
+                let url;
+                let length = MyAttraction.imageLength-1;
+
+                let radio_btn = document.getElementById('radio_list').children[MyButton.clickCount];
+
+                radio_btn.checked = false;
+                
+                if(MyButton.clickCount > 0){
+                    if(action == 'prev'){
+                        MyButton.clickCount--;
+                    }
+                    else{
+                        MyButton.clickCount++;
+                    }
+                }
+                else{
+                    if(action == 'next'){
+                       
+                        MyButton.clickCount++;
+                    }
+                }
+
+                if(MyButton.clickCount <= length){
+                    url = 'url('+MyAttraction.images[MyButton.clickCount]+')';
+                    pictureBox.style.backgroundImage = url;
+                    radio_btn = document.getElementById('radio_list').children[MyButton.clickCount];
+                    radio_btn.checked = true;
+                }
+                else{
+                    MyButton.clickCount = length;
+                    radio_btn.checked = true;
+                }               
+            }
+        </script>
+    </head>
+    <body class="attraction" onload="loaded();">
+        <div class="container">
+            <nav class="sticky" id="nav">
+                <div class="top-container">
+                    <div class="subject">台北一日遊</div>
+                    <div class="frame">預定行程</div>
+                    <div class="frame" onclick="signin();">登入/註冊</div>
+                </div>     
+            </nav>
+            <section>
+                <div id="pictureBox">
+                    <div class="arrow_list">
+                        <button class="pic_btn" id="left" onclick="changeImage('prev');"></button>
+                        <button class="pic_btn" id="right" onclick="changeImage('next');"></button>
+                    </div>
+                    <div id="radio_list">
+                    </div>
+                </div>
+                <div id="profile">
+                    <div id="name"></div>
+                    <div id="info"></div>
+                    <div id="booking-form">
+                        <div class="booking-title">訂購導覽行程</div>
+                        <div class="booking-intro">以此景點為中心的一日行程，帶您探索城市角落故事</div>
+                        <div class="booking-date">選擇日期：</div>
+                        <input type="date" class="date"/>
+                        <div class="charge">
+                            <div class="time">選擇時間 :</div>
+                            <div class="radio-options">
+                                <label  id="left_btn" style="display: flex;" onclick="select('morning')"><input type="radio" class="radio_btn" id="btn1"></input><div style="color:#666666; font-size:16px;">上半天</div></label>
+                                <label  id="right_btn" style="display: flex;" onclick="select('afternoon')"><input type="radio" class="radio_btn" id="btn2"></input><div style="color:#666666; font-size:16px;">下半天</div></label>
+                            </div>
+                        </div>
+                        <div class="toll">導覽費用：</div>
+                        <div id="fee">新台幣 2000 元</div>
+                        <div><button class="booking_confirm">開始預訂行程</button></div>
+                    </div>
+                </div>
+                <hr class="parting-line"/>
+                <div id="description"></div>
+                <div class="content">
+                    <div class="address-title">景點地址 :</div>
+                    <div id="address"></div>
+                    <div class="transport-title">交通方式 :</div>
+                    <div id="transport"></div>
+                </div>
+            </section>
+        </div>
+        <div class="footer">COPYRIGHT &copy 2021 台北一日遊</div>
+    </body>
+</html>

@@ -5,9 +5,62 @@
         <meta charset="utf-8" />
         <title>首頁</title>
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
-            let nextPage = null;
-            let keyword = null;
+            class AttractionsList{
+                constructor(){
+                    this.keyword = null;
+                    this.flag = false;
+                    this.offset = 0;
+                }
+                parse(data, page){
+                    this.length = data.length;
+                    this.nextPage = page;
+                    this.name = [];
+                    this.mrtStation = [];
+                    this.category = [];
+                    this.images = [];
+
+                    for(let i = 0; i < this.length; i++){
+                        if(data[i]['name'] != 'null'){
+                            this.name.push(data[i]['name']);
+                        }
+                        else{
+                            this.name.push('')
+                        }
+                        if(data[i]['mrt'] != 'null'){
+                            this.mrtStation.push(data[i]['mrt']);;
+                        }
+                        else{
+                            this.mrtStation.push('')
+                        }
+                        if(data[i]['category'] != 'null'){
+                            this.category.push(data[i]['category']);
+                        }
+                        else{
+                            this.category.push('');
+                        }
+                        if(data[i]['category'] != 'null'){
+                            this.images.push(data[i]['images']);
+                        }
+                        else{
+                            this.images.push('');
+                        }
+                    }
+                }
+                test(){
+                    console.log(this.name);
+                    console.log(this.mrtStation);
+                    console.log(this.category);
+                    console.log(this.images);
+                    console.log(this.nextPage);
+                }
+                search(keyword){
+                    this.keyword = keyword;
+                }
+            }
+
+            let Attractions = new AttractionsList();
 
             function loaded(){
 
@@ -20,34 +73,24 @@
 
             async function getAttractions(url){
 
-                const response = await fetch(url);
-                const result = await response.json();
-                let count = result['data'].length;
-                
-                if(count != 0){
-                    let name = [];
-                    let mrt = [];
-                    let tag = [];
-                    let img = [];
-
-                    nextPage = result['nextPage'];
-
-                    for(i=0; i<count; i++){
-                        name.push(result['data'][i]['name']);
-                        mrt.push(result['data'][i]['mrt']);
-                        tag.push(result['data'][i]['category']);
-                        img.push(result['data'][i]['images'][0]);
+                if(!Attractions.flag){
+                    Attractions.flag = true;
+                    const response = await fetch(url);
+                    const result = await response.json();
+                    let count = result['data'].length;
+                    let data = result['data'];
+                    let Page = result['nextPage'];
+                    
+                    if(count > 0){
+                        Attractions.parse(data, Page);
+                        createElement();
                     }
-                    data = [name, mrt, tag, img]
-                    createElement(data, count);
+                    else{
+                        alert("無相關結果");
+                    }
+                    Attractions.flag = false;
                 }
-                else{
-                    alert("無查詢結果");
-                }
-                
             };
-            
-
             // infinite scrolling
             function scroll(){
                 const scrollTop = document.documentElement.scrollTop;
@@ -55,66 +98,65 @@
                 const clientHeight = document.documentElement.clientHeight;
 
                 // on the bottom
-                if(scrollHeight-Math.trunc(scrollTop) == Math.trunc(clientHeight)){
-                    if(keyword == null){
-                        url='/api/attractions?page='+ nextPage.toString();
+                if(scrollHeight-Math.trunc(scrollTop) - Math.trunc(clientHeight) <= 1){
+                    if(Attractions.keyword == null){
+                        url='/api/attractions?page='+ Attractions.nextPage;
                     }
                     else{
-                        url='/api/attractions?page='+ nextPage.toString()+'&keyword='+keyword;
+                        url='/api/attractions?page='+ Attractions.nextPage + '&keyword=' + Attractions.keyword;
                     }
-
-                    setTimeout(debounce(url), 50);
+                    debounce(url);
                 }
             };
 
             function debounce(url){
-                if(nextPage != null){
+                if(Attractions.nextPage != null){
                     getAttractions(url);
-                }  
+                }
             };
-
             function mouseWheel(e){
                 let direction = e.deltaY;
                 let screenWidth = screen.width;
                 if(screenWidth > 1200){
-                    if(nextPage == 1){
+                    if(Attractions.nextPage == 1){
                         if(direction > 0)
                         {
-                        if(keyword == null){
-                            url='/api/attractions?page='+ nextPage.toString();
+                        if(Attractions.keyword == null){
+                            url='/api/attractions?page='+ Attractions.nextPage;
                         }
                         else{
-                            url='/api/attractions?page='+ nextPage.toString()+'&keyword='+keyword;
+                            url='/api/attractions?page='+ Attractions.nextPage + '&keyword=' + Attractions.keyword;
                         }
-                        setTimeout(debounce(url), 50);
+                        debounce(url);
                         window.removeEventListener('wheel', mouseWheel);
                         }
                     }                     
-                }
-                
+                }              
             };
-
             function searching(){
                 let textbox = document.getElementById("keyword");
-                keyword = textbox.value;
+                Attractions.keyword = textbox.value;
+
                 if(textbox.value == ''){
                     alert("請輸入關鍵字");
-                    keyword = null;
+                    Attractions.keyword = null;
+
                 }
                 else if(textbox.value == '請輸入景點名稱查詢'){
                     alert("請輸入關鍵字");
-                    keyword = null;
                     textbox.select();
+                    Attractions.keyword = null;
                 }
                 else{
-                    url = '/api/attractions?page=0&keyword='+keyword;
-                    nextPage = 0;
+                    url = '/api/attractions?page=0&keyword='+Attractions.keyword;
+                    Attractions.nextPage = 0;
+                    Attractions.offset = 0;
                     removeElement();
                     window.addEventListener('wheel', mouseWheel);
-                    setTimeout(debounce(url), 50);
+                    debounce(url);
                 }
+                console.log(Attractions.keyword);
             };
-
             function removeElement(){
                 let container = document.getElementById("attractions");
                 let child = container.lastElementChild;
@@ -122,21 +164,22 @@
                     container.removeChild(child);
                     child = container.lastElementChild;
                 }
-            }
-
+            };
             // Create Element
-            function createElement(data, count){
+            function createElement(){
                 let attractions  = document.getElementById("attractions");
-                let attraction, img, content;
+                let attraction, img, content, link;
 
-                for(i=0; i<count; i++){
+                for(i=0; i<Attractions.length; i++){
                     // <div class="attraction" />
                     attraction = document.createElement("div");
+                    link = document.createElement("a");
+                    link.setAttribute('href', '/attraction/'+ ((Attractions.offset*12)+i+1).toString());
+                    link.setAttribute('style', 'text-decoration:none');
                     attraction.classList.add("attraction");
                     // <img src="" />
                     img = document.createElement("img");
-                    img.src = data[3][i];
-
+                    img.src = Attractions.images[i][0];
                     attraction.appendChild(img);
                     for(j=0; j<3; j++){
                         // <div class="content">
@@ -145,20 +188,26 @@
                         switch(j){
                             case 0:
                                 content.setAttribute('id', 'name');
-                                
+                                // content.appendChild(document.createTextNode(Attractions.name[i]));
+                                content.textContent = Attractions.name[i];
                                 break;
                             case 1:
                                 content.setAttribute('id', 'mrt');
+                                // content.appendChild(document.createTextNode(Attractions.mrtStation[i]));
+                                content.textContent = Attractions.mrtStation[i];
                                 break;
                             case 2:
                                 content.setAttribute('id', 'categoery');
+                                content.appendChild(document.createTextNode(Attractions.category[i]));
+                                // content.textContent = Attractions.mrtStation[i];
                                 break;
                         }
-                        content.appendChild(document.createTextNode(data[j][i]));
                         attraction.appendChild(content);
                     }
-                    attractions.appendChild(attraction);
+                    link.appendChild(attraction);
+                    attractions.appendChild(link);
                 }
+                Attractions.offset++;
             };
             function textboxFocused(){
                 let textbox = document.getElementById("keyword");
@@ -166,15 +215,40 @@
                     textbox.value = '';
                 }
             }
-            
+            function signin(){
+                let nav = document.getElementById("nav");
+                let cover = document.getElementById("cover");
+                let menu = document.getElementById("menu");
+
+                nav.classList.remove("sticky");
+                cover.classList.add("cover");
+                menu.style.display = "block";
+            }
+            function closeMenu(){
+                let nav = document.getElementById("nav");
+                let cover = document.getElementById("cover");
+                let menu = document.getElementById("menu");
+
+                nav.classList.add("sticky");
+                cover.classList.remove("cover");
+                menu.style.display = "none";
+            }        
         </script>
     </head>
     <body style="margin: 0px; font-family: NotoSansTC-Regular;" onload="loaded();">
-        <nav class="sticky">
+        <div id="menu" class="menu">
+            <div class="member">登入會員帳號<button style="position: absolute; right:10px; width:20px; height: 20px; background-color: transparent; border: none;" onclick="closeMenu();"></button></div>
+            <div class="signin"><input value="輸入電子信箱"/></div>
+            <div class="signin"><input value="輸入密碼"/></div>
+            <div class="signin"><button>登入帳戶</button></div>
+            <div style="color:#666666; text-align: center; margin:5px;">還沒有帳戶？點此註冊</div>
+        </div>
+        <div id="cover"></div>
+        <nav class="sticky" id="nav">
             <div class="top-container">
                 <div class="subject">台北一日遊</div>
                 <div class="frame">預定行程</div>
-                <div class="frame">登入/註冊</div>
+                <div class="frame" onclick="signin();">登入/註冊</div>
             </div>     
         </nav>
         <section>
