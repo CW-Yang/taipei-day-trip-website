@@ -21,7 +21,6 @@
     margin-left: auto; 
     margin-right: auto; 
     width: 340px;
-    height: 275px;
     background-color: white;
     z-index: 1;
     display: none;
@@ -37,12 +36,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 15px;
+    padding: 5px;
+    
 }
 .signin input{
-    width: 310px;
-    height: 47px;
-    border: solid 1px #666666;
+    width:298px; height: 35px; padding: 6px;
+    border: groove aaa7a7;
     color: #666666;
 }
 .signin button{

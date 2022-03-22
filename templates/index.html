@@ -7,6 +7,7 @@
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
+            let flag = true;
             class AttractionsList{
                 constructor(){
                     this.keyword = null;
@@ -69,10 +70,10 @@
 
                 url="/api/attractions?page=0"
                 getAttractions(url);
+                makeRequestWithJWT();
             };
 
             async function getAttractions(url){
-
                 if(!Attractions.flag){
                     Attractions.flag = true;
                     const response = await fetch(url);
@@ -92,19 +93,21 @@
                 }
             };
             // infinite scrolling
-            function scroll(){
+            function scroll(){              
+                
                 const scrollTop = document.documentElement.scrollTop;
                 const scrollHeight = document.documentElement.scrollHeight;
                 const clientHeight = document.documentElement.clientHeight;
 
                 // on the bottom
-                if(scrollHeight-Math.trunc(scrollTop) - Math.trunc(clientHeight) <= 1){
+                if(scrollHeight - Math.trunc(scrollTop) - Math.trunc(clientHeight) <= 1){
                     if(Attractions.keyword == null){
                         url='/api/attractions?page='+ Attractions.nextPage;
                     }
                     else{
                         url='/api/attractions?page='+ Attractions.nextPage + '&keyword=' + Attractions.keyword;
                     }
+                    makeRequestWithJWT();
                     debounce(url);
                 }
             };
@@ -114,6 +117,7 @@
                     getAttractions(url);
                 }
             };
+
             function mouseWheel(e){
                 let direction = e.deltaY;
                 let screenWidth = screen.width;
@@ -218,37 +222,199 @@
             function signin(){
                 let nav = document.getElementById("nav");
                 let cover = document.getElementById("cover");
-                let menu = document.getElementById("menu");
+                let menu = document.getElementById("signin_menu");
+                let state = document.getElementById("state");
 
-                nav.classList.remove("sticky");
-                cover.classList.add("cover");
-                menu.style.display = "block";
+                if(state.textContent != "登出系統"){
+                    nav.classList.remove("sticky");
+                    cover.classList.add("cover");
+                    menu.style.display = "block";
+                }
+                else{
+                    state.textContent = "登入/註冊";
+                    signout();
+                }
+                
             }
             function closeMenu(){
                 let nav = document.getElementById("nav");
                 let cover = document.getElementById("cover");
-                let menu = document.getElementById("menu");
+                let menu_1 = document.getElementById("signin_menu");
+                let menu_2 = document.getElementById("signup_menu");
 
                 nav.classList.add("sticky");
                 cover.classList.remove("cover");
-                menu.style.display = "none";
-            }        
+                menu_1.style.display = "none";
+                menu_2.style.display = "none";
+            }
+            async function login(){
+                let email = document.getElementById("email").value;
+                let password = document.getElementById("password").value;
+                let state = document.getElementById("state");
+                
+                if(email == '' | password == ''){
+                    changeText("signin_tip", "請輸入帳號或密碼！", true);                   
+                }
+                else{
+                        let data = {
+
+                            "email":email,
+                            "password":password                        
+                        }
+                        $.ajax({
+                                url:"/api/user",
+                                type:"patch",
+                                headers : new Headers({
+                                    'Content-Type': 'application/json'
+                                }),
+                                data:JSON.stringify(data),
+                                success: function(result){
+                                    if(result["ok"] === undefined){
+                                        changeText("signin_tip", result["message"], true);
+                                    }
+                                    else{
+                                        location.reload();
+                                    }
+                                }
+                            })
+                    }   
+                
+            }
+            function signout(){
+                $.ajax({
+                            url:"/api/user",
+                            type:"delete",
+                            headers : new Headers({
+                                'Content-Type': 'application/json'
+                            }),
+                            success: function(result){
+                                location.reload();
+                            }
+                        })
+            }
+            function changeText(idName, message, error){
+                let tip = document.getElementById(idName);
+                tip.textContent = message;
+                if(error == true){
+                    tip.style.color = "red";
+                }
+                setTimeout(function(){
+                    if(idName == "signin_tip"){
+                        tip.textContent = "還沒有帳戶？點此註冊";
+                    }
+                    else{
+                        tip.textContent = "已經有帳戶了？點此登入"
+                    }
+                        tip.style.color = "#666666";
+                    }, 1500);
+            }     
+            async function signUp(){
+                let name = document.getElementById("name").value;
+                let email = document.getElementById("unsign_email").value;
+                let password = document.getElementById("unsign_password").value;
+
+                if(name == '' | email == '' | password == ''){
+                    changeText("signup_tip", "以上欄位不得為空", true);
+                }
+                else{
+                    let data = {
+                    "name":name,
+                    "email":email,
+                    "password":password
+                    }
+
+                    $.ajax({
+                        url:"/api/user",
+                        type:"post",
+                        headers : new Headers({
+                                'Content-Type': 'application/json'
+                            }),
+                        data:JSON.stringify(data),
+                        success: function(result){
+                            if(result["ok"] === undefined){
+                                changeText("signup_tip", result["message"], true)
+                            }
+                            else{
+                                changeText("signup_tip", "註冊成功！", false)
+                            }
+                        }
+
+                    })
+                }
+
+                
+            }   
+            function changeMenu(current_menu){
+                let signin, signup;
+                signin = document.getElementById("signin_menu");
+                signup = document.getElementById("signup_menu");
+
+                if(current_menu == 'signin'){
+                    
+                    signin.style.display = "none";
+                    signup.style.display = "block";
+                }
+                else{
+                    signin.style.display = "block";
+                    signup.style.display = "none";
+                }
+            }
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }   
+
+            async function makeRequestWithJWT() {
+                if(flag){
+                    flag = false;
+                    let state = document.getElementById("state");
+                    $.ajax({
+                            url:"/api/user",
+                            type:"get",
+                            headers :{
+                                    'X-CSRF-TOKEN': getCookie('csrf_access_token'),
+                                },
+                            success: function(result){
+                                console.log(result);
+                                if(result['data'] === undefined){
+                                    state.textContent = "登入/註冊";
+                                }
+                                else{
+                                    state.textContent = "登出系統";
+                                }
+                            }
+
+                    })
+                    flag = true;
+                }
+                
+                
+            }
         </script>
     </head>
     <body style="margin: 0px; font-family: NotoSansTC-Regular;" onload="loaded();">
-        <div id="menu" class="menu">
+        <div style="height: 275px;" id="signin_menu" class="menu">
             <div class="member">登入會員帳號<button style="position: absolute; right:10px; width:20px; height: 20px; background-color: transparent; border: none;" onclick="closeMenu();"></button></div>
-            <div class="signin"><input value="輸入電子信箱"/></div>
-            <div class="signin"><input value="輸入密碼"/></div>
-            <div class="signin"><button>登入帳戶</button></div>
-            <div style="color:#666666; text-align: center; margin:5px;">還沒有帳戶？點此註冊</div>
+            <div class="signin"><input id="email" placeholder="輸入電子信箱"/></div>
+            <div class="signin"><input type="password" id="password" placeholder="輸入密碼"/></div>
+            <div class="signin"><button onclick="login();">登入帳戶</button></div>
+            <div style="color:#666666; margin:10px; text-align: center;" id="signin_tip" onclick="changeMenu('signin');">還沒有帳戶？點此註冊</div>   
+        </div>
+        <div style="height: 334px; display: none;" id="signup_menu" class="menu">
+            <div class="member">註冊會員帳號<button style="position: absolute; right:10px; width:20px; height: 20px; background-color: transparent; border: none;" onclick="closeMenu();"></button></div>
+            <div class="signin"><input id="name" placeholder="輸入姓名"/></div>
+            <div class="signin"><input id="unsign_email" placeholder="輸入電子郵件"/></div>
+            <div class="signin"><input id="unsign_password" placeholder="輸入密碼"/></div>
+            <div class="signin"><button onclick="signUp();">註冊新帳戶</button></div>
+            <div style="color:#666666; text-align: center; margin:10px;" id="signup_tip" onclick="changeMenu('signup');">已經有帳戶了？點此登入</div> 
         </div>
         <div id="cover"></div>
         <nav class="sticky" id="nav">
             <div class="top-container">
                 <div class="subject">台北一日遊</div>
                 <div class="frame">預定行程</div>
-                <div class="frame" onclick="signin();">登入/註冊</div>
+                <div id="state" class="frame" onclick="signin();">登入/註冊</div>
             </div>     
         </nav>
         <section>
