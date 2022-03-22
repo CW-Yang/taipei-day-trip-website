@@ -70,7 +70,6 @@
 
                 url="/api/attractions?page=0"
                 getAttractions(url);
-                makeRequestWithJWT();
             };
 
             async function getAttractions(url){
@@ -90,6 +89,7 @@
                         alert("無相關結果");
                     }
                     Attractions.flag = false;
+                    makeRequestWithJWT();
                 }
             };
             // infinite scrolling
@@ -107,7 +107,7 @@
                     else{
                         url='/api/attractions?page='+ Attractions.nextPage + '&keyword=' + Attractions.keyword;
                     }
-                    makeRequestWithJWT();
+                    
                     debounce(url);
                 }
             };
