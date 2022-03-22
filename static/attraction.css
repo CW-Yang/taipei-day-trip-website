@@ -2,6 +2,56 @@
     margin: 0px; 
     font-family: NotoSansTC-Regular;
 }
+.cover{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(112, 112, 112, .5);
+    z-index: 2;
+}
+.number{
+    display: none;
+}
+.menu{
+    position: fixed;
+    top: 80px;
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 340px;
+    background-color: white;
+    z-index: 3;
+    display: none;
+}
+.member{
+    text-align: center; margin: 10px; font-weight: 700; color:#666666; letter-spacing: 1px;
+    background-image: url("icon_close.png");
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+    background-position: right top;
+}
+.signin{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    
+}
+.signin input{
+    width:298px; height: 35px; padding: 6px;
+    border: groove aaa7a7;
+    color: #666666;
+}
+.signin button{
+    background-color: #448899;
+    color: white;
+    width: 310px;
+    height: 47px;
+    border: none;
+}
 .container{
     display:flex; 
     flex-wrap: wrap; 
