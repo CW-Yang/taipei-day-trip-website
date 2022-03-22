@@ -1,7 +1,5 @@
-from pickle import FALSE
-from click import command
+
 from flask import jsonify
-from idna import valid_contextj
 from mysql.connector.pooling import MySQLConnectionPool
 from mysql.connector import errors
 import setting
