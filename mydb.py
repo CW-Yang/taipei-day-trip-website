@@ -75,14 +75,14 @@ def get_attractions(page, keyword):
     if(keyword != None):
         value = ("%"+keyword+"%", )
         command = "SELECT COUNT(*) FROM attractions WHERE name LIKE %s"
-        count = connect_with_database(command, value, FALSE)[0][0]
+        count = connect_with_database(command, value, False)[0][0]
         pages = int(count/12)+1
         #print(pages)
         if(page < pages):
             if(count < 12):
                 nextPage = None
                 command = "SELECT * FROM attractions WHERE name LIKE %s"
-                data = connect_with_database(command, value, FALSE)
+                data = connect_with_database(command, value, False)
                 for i in data:
                     result.append(data_formatting(i))
 
@@ -95,7 +95,7 @@ def get_attractions(page, keyword):
                     nextPage = None
                 value = ("%"+keyword+"%", start_index, end_index)
                 command = "SELECT * FROM attractions WHERE name LIKE %s ORDER BY id LIMIT %s,%s"
-                data = connect_with_database(command, value, FALSE)
+                data = connect_with_database(command, value, False)
                 for i in data:
                     result.append(data_formatting(i))   
         else:
@@ -111,7 +111,7 @@ def get_attractions(page, keyword):
        
         value = (start_index, end_index)
         command = "SELECT * FROM attractions WHERE number >= %s AND number <= %s"
-        data = connect_with_database(command, value, FALSE)
+        data = connect_with_database(command, value, False)
 
         for i in data:
             result.append(data_formatting(i))
@@ -127,7 +127,7 @@ def get_attractions(page, keyword):
 def get_attraction(id):
     value = (id, )
     command = "SELECT * FROM attractions WHERE number = %s"
-    data = connect_with_database(command, value, FALSE)
+    data = connect_with_database(command, value, False)
     if(data != []):
         result = data_formatting(data[0])
         
