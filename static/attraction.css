@@ -89,6 +89,7 @@ nav>.sticky{
     font-size: 16px;
     color: #666666;
     margin-right: 10px;
+    cursor: pointer;
 }
 
 section{

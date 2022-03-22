@@ -327,15 +327,15 @@
             <div class="signin"><input id="email" placeholder="輸入電子信箱"/></div>
             <div class="signin"><input type="password" id="password" placeholder="輸入密碼"/></div>
             <div class="signin"><button onclick="login();">登入帳戶</button></div>
-            <div style="color:#666666; margin:10px; text-align: center;" id="signin_tip" onclick="changeMenu('signin');">還沒有帳戶？點此註冊</div>   
+            <div style="color:#666666; margin:10px; text-align: center; cursor: pointer;" id="signin_tip" onclick="changeMenu('signin');">還沒有帳戶？點此註冊</div>   
         </div>
         <div style="height: 334px; display: none;" id="signup_menu" class="menu">
             <div class="member">註冊會員帳號<button style="position: absolute; right:10px; width:20px; height: 20px; background-color: transparent; border: none;" onclick="closeMenu();"></button></div>
             <div class="signin"><input id="name" placeholder="輸入姓名"/></div>
             <div class="signin"><input id="unsign_email" placeholder="輸入電子郵件"/></div>
-            <div class="signin"><input id="unsign_password" placeholder="輸入密碼"/></div>
+            <div class="signin"><input type="password" id="unsign_password" placeholder="輸入密碼"/></div>
             <div class="signin"><button onclick="signUp();">註冊新帳戶</button></div>
-            <div style="color:#666666; text-align: center; margin:10px;" id="signup_tip" onclick="changeMenu('signup');">已經有帳戶了？點此登入</div> 
+            <div style="color:#666666; text-align: center; margin:10px; cursor: pointer;" id="signup_tip" onclick="changeMenu('signup');">已經有帳戶了？點此登入</div> 
         </div>
         <div id="cover"></div>
         <div class="container">
