@@ -21,13 +21,13 @@
     margin-left: auto; 
     margin-right: auto; 
     width: 340px;
-    height: 275px;
     background-color: white;
     z-index: 1;
     display: none;
 }
 .member{
     text-align: center; margin: 10px; font-weight: 700; color:#666666; letter-spacing: 1px;
+    cursor: pointer;
     background-image: url("icon_close.png");
     background-repeat: no-repeat;
     background-size: 16px 16px;
@@ -37,12 +37,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 15px;
+    padding: 5px;
+    
 }
 .signin input{
-    width: 310px;
-    height: 47px;
-    border: solid 1px #666666;
+    width:298px; height: 35px; padding: 6px;
+    border: groove aaa7a7;
     color: #666666;
 }
 .signin button{
@@ -109,6 +109,7 @@ content{
     font-size: 16px;
     color: #666666;
     margin-right: 10px;
+    cursor: pointer;
 }
 .slogan{
     flex:none;
@@ -148,6 +149,7 @@ content{
 }
 .search_btn{
     width: 50px; height: 46px; background-color:#448899; border: none; margin-right: 0 auto; margin-right: 10px;
+    cursor: pointer;
 }
 #name{
     

@@ -1,0 +1,301 @@
+.cover{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(112, 112, 112, .5);
+    z-index: 2;
+}
+.number{
+    display: none;
+}
+.menu{
+    position: fixed;
+    top: 80px;
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 340px;
+    background-color: white;
+    z-index: 3;
+    display: none;
+}
+.member{
+    text-align: center; margin: 10px; font-weight: 700; color:#666666; letter-spacing: 1px;
+    background-image: url("icon_close.png");
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+    background-position: right top;
+}
+.signin{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    
+}
+.signin input{
+    width:298px; height: 35px; padding: 6px;
+    border: groove aaa7a7;
+    color: #666666;
+}
+.signin button{
+    background-color: #448899;
+    color: white;
+    width: 310px;
+    height: 47px;
+    border: none;
+}
+.container{
+    display:flex; 
+    flex-wrap: wrap; 
+    width:auto; 
+    margin-left: auto; 
+    margin-right: auto; 
+    align-items: center; 
+    justify-content: center;
+}
+nav{
+    width:100%; height: 44px;
+    background-color: white;
+    z-index: 1;
+    margin-bottom: 37px;
+}
+nav>.sticky{
+    position: sticky;
+    top: 0px;
+}
+.top-container{
+    margin: 0px auto;
+    display: flex;
+    width:1200px;
+    justify-content: center;
+    align-items: center;
+}
+.subject{
+    color:#448899;
+    font-size:30px;
+    font-weight: bold;
+    margin-right: auto;
+    margin-left: 10px;
+}
+.frame{
+    font-size: 16px;
+    color: #666666;
+    margin-right: 10px;
+    cursor: pointer;
+}
+#headline{
+    width: 1000px;
+    font-size: 19px;
+    font-weight: 700;
+    color:#666666;
+    text-align: left;
+    margin:0 auto;
+}
+.section{
+    width:980px;
+    height: 200px;
+    margin:0 auto;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+}
+.picture_box{
+    width: 280px;
+    height: 220px;
+    overflow: hidden;
+    margin-right: 11px;
+}
+#infor{
+    margin-left: 11px;
+}
+.title{
+    display: inline-block; font-weight: 700; color: #666666;
+}
+#frame1{
+    color: #448899;
+    font-size: 16px;
+    font-weight: 700;
+}
+#frame2{
+    font-size: 16px;
+    color: #666666;
+    display: inline-block;
+    margin-left: 3px;
+}
+#frame3{
+    font-size: 16px;
+    color: #666666;
+    display: inline-block;
+    margin-left: 3px;
+}
+#frame4{
+    font-size: 16px;
+    color: #666666;
+    display: inline-block;
+    margin-left: 3px;
+}
+#frame5{
+    font-size: 16px;
+    color: #666666;
+    display: inline-block;
+    margin-left: 3px;
+}
+.icon{
+    position: absolute;
+    background-image: url('icon_delete.png');
+    background-repeat: no-repeat;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+.parting-line{
+    width: 1200px; 
+    margin-top: 60px; 
+    margin-bottom: 40px;
+}
+.contact_form{
+    width: 980px;
+    height: 227px;
+    color: #666666;
+    margin: 0 auto;
+}
+.field{
+    height: 40px;
+    margin: 15px;
+}
+.contact_form_title{
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+#contact_form_name{
+    font-size: 16px;
+    display: inline-block;
+}
+.textbox{
+    width: 176px;
+    height: 12px;
+    padding: 10px;
+    font-size: 16px;
+}
+.payment{
+    width: 980px;
+    height: 188px;
+    color: #666666;
+    margin: 0 auto;
+}.payment_title{
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+.confirm{
+    width: 980px;
+    height: 100px;
+    color: #666666;
+    margin: 0 auto;
+    position: relative;
+}
+#confirm_fee{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 16px;
+}
+.booking_confirm{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 154px;
+    height: 36px;
+
+    text-align: center;
+
+    color: white;
+    font-size: 19px;
+    font-weight: 400;
+
+    background-color: #448899;
+    border: none;
+    border-radius: 8px;
+}
+@font-face{
+    font-family: 'NotoSansTC-Regular';
+    src:url("NotoSansTC-Regular.otf")
+}
+@media (max-width:1200px){
+   
+    .top-container{
+        width:100%;
+    }
+    .container{
+        width:100%;
+        height: 100%;
+    }
+    nav{
+        width: 100%;
+    }
+    
+    .parting-line{
+        width:100%;
+    }
+}
+@media (max-width:980px){
+    .section{
+        width:100%;
+        height: auto;
+        justify-content: center;
+        align-items: center;
+    }
+    #headline{
+        width:100%;
+   }
+   .contact_form{
+       width: 100%;
+       height: auto;
+   }
+   .payment{
+        width: 100%;
+        height: auto;
+   }
+   .confirm{
+    width: 100%;
+   }
+}
+
+.footer{
+    font-weight: 700;
+    width: 100%;
+    height: 104px;
+    background-color: #757575;
+    color: white;
+    text-align: center;
+    line-height: 104px;
+    margin-top: 50px;
+    margin-bottom: auto;
+}
+.message{
+    color: #666666;
+    font-size: 16px;
+    text-align: center;
+}
+@media (max-width:555px){
+  #frame1{
+      margin-top: 25px;
+  }
+  .picture_box{
+      width: 100%;
+      height: 256px;
+  }
+  .icon{
+      top: 100%;
+  }
+  .picture_box{
+      margin-right: 0;
+  }
+}
