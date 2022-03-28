@@ -170,11 +170,13 @@
                                 },
                             success: function(result){
                                 console.log(result);
-                                if(result['data'] === undefined){
+                                if(result['data'] === null){
                                     state.textContent = "登入/註冊";
+                                    return "unsigned"
                                 }
                                 else{
                                     state.textContent = "登出系統";
+                                    return "signed"
                                 }
                             }
 
@@ -319,6 +321,56 @@
                     signup.style.display = "none";
                 }
             }   
+            function booking(){
+                
+                let fee = document.getElementById("fee");
+                let price, during, date;
+                date = document.getElementById("date").value;
+                console.log(date);
+                let string = location.href;
+                let startIndex = string.search('n/')+2;
+                let endIndex = string.length;
+                let id;
+                id = Number(string.substring(startIndex, endIndex));
+                if(fee.textContent == "新台幣 2000 元"){
+                    price = 2000;
+                    during = "morning";
+                }
+                else{
+                    price = 2500;
+                    during = "afternoon";
+                }
+                data = {
+                    "attractionId":id,
+                    "date":date,
+                    "time":during,
+                    "price":price
+                }
+                $.ajax({
+                    url:'/api/booking',
+                    type:'post',
+                    headers : new Headers({
+                                'Content-Type': 'application/json'
+                            }),
+                    data:JSON.stringify(data),
+                    success: function(result){
+                        if(result["ok"] === undefined){
+                            if(result["message"] == "尚未登入"){
+                                signin();
+                            }
+                            else{
+                                alert(result['message']);
+                            }
+                        }
+                        else{
+                            location.replace('/booking');
+                        }
+                    }
+                })
+            }
+            function bookingPage(){
+                location.replace('/booking');
+            }
         </script>
     </head>
     <body class="attraction" onload="loaded();">
@@ -342,7 +394,7 @@
             <nav class="sticky" id="nav">
                 <div class="top-container">
                     <div class="subject">台北一日遊</div>
-                    <div class="frame">預定行程</div>
+                    <div class="frame" onclick="bookingPage();">預定行程</div>
                     <div class="frame" onclick="signin();" id="state">登入/註冊</div>
                 </div>     
             </nav>
@@ -362,7 +414,7 @@
                         <div class="booking-title">訂購導覽行程</div>
                         <div class="booking-intro">以此景點為中心的一日行程，帶您探索城市角落故事</div>
                         <div class="booking-date">選擇日期：</div>
-                        <input type="date" class="date"/>
+                        <input type="date" class="date" id="date"/>
                         <div class="charge">
                             <div class="time">選擇時間 :</div>
                             <div class="radio-options">
@@ -372,7 +424,7 @@
                         </div>
                         <div class="toll">導覽費用：</div>
                         <div id="fee">新台幣 2000 元</div>
-                        <div><button class="booking_confirm">開始預訂行程</button></div>
+                        <div><button class="booking_confirm" onclick="booking();">開始預訂行程</button></div>
                     </div>
                 </div>
                 <hr class="parting-line"/>

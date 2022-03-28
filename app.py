@@ -1,11 +1,13 @@
 
+import time
+import datetime
 from flask import *
 from api import app2
 from flask_jwt_extended import create_access_token, decode_token
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import set_access_cookies
 from flask_jwt_extended import unset_jwt_cookies
-from mydb import create_account, is_the_account_exit, is_the_account_currect, get_user_info
+from mydb import create_account, is_the_account_exit, is_the_account_currect, get_user_info, attraction_booking, get_booking_info, delete_schedule
 
 app=Flask(__name__)
 app.config["JSON_AS_ASCII"]=False
@@ -40,10 +42,12 @@ def thankyou():
 def member():
 	if(request.method == 'GET'):
 		cookie = request.cookies.get('access_token_cookie')
-		# print(decode_token(cookie)['sub'])
-		email = decode_token(cookie)['sub']
-		data = get_user_info(email)
-		response = jsonify({"data":data})
+		if(cookie != None):
+			email = decode_token(cookie)['sub']
+			data = get_user_info(email)
+			response = jsonify({"data":data})
+		else:
+			response = jsonify({"data":None})
 
 	elif(request.method == 'POST'):
 		data = eval(request.get_data())
@@ -70,6 +74,46 @@ def member():
 		unset_jwt_cookies(response)
 		print("登出")
 	return response
+
+@app.route('/api/booking', methods=['GET', 'POST', 'DELETE'])
+def api_booking():
+	if(request.method == 'POST'):
+		data = eval(request.get_data())	
+		if(data['date'] == ''):
+			msg = "請選擇日期"
+			response = {"error":True, "message":msg}
+		else:
+			date = time.strptime(data['date'], "%Y-%m-%d")
+			today = time.strptime(str(datetime.date.today()), "%Y-%m-%d")
+			if(date < today):
+				msg = "日期資訊有誤"
+				response = {"error":True, "message":msg}
+
+			else:
+				cookie = request.cookies.get('access_token_cookie')
+				if(cookie == None):
+					msg = "尚未登入"
+					response = {"error":True, "message":msg}
+
+				else:
+					email = decode_token(cookie)['sub']
+					attraction_booking(email, data)
+					response = {"ok":True}
+		return jsonify(response)
+	elif(request.method == 'GET'):
+		cookie = request.cookies.get('access_token_cookie')
+		if(cookie != None):
+			email = decode_token(cookie)['sub']
+			response = get_booking_info(email)
+		else:
+			response = {"error":True, "message":"尚未登入"}
+
+	else:
+		cookie = request.cookies.get('access_token_cookie')
+		email = decode_token(cookie)['sub']
+		response = delete_schedule(email)
+
+	return jsonify(response)
 
 app.register_blueprint(app2, url_prefix='/api')
 

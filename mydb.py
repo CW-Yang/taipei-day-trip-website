@@ -1,5 +1,7 @@
-
+import json
+from urllib import response
 from flask import jsonify
+from itsdangerous import json
 from mysql.connector.pooling import MySQLConnectionPool
 from mysql.connector import errors
 import setting
@@ -130,7 +132,6 @@ def get_attraction(id):
     data = connect_with_database(command, value, False)
     if(data != []):
         result = data_formatting(data[0])
-        
         response = {
             "data": result
         }
@@ -139,8 +140,7 @@ def get_attraction(id):
             "error":True,
             "message":"The id number is over range"
         }
-    response = jsonify(response)
-    return response
+    return jsonify(response)
 
 def get_error_message(message):
     response = {
@@ -178,3 +178,53 @@ def get_user_info(email):
     value = (email, )
     data = connect_with_database(command, value, False)
     return {"id":data[0][0], "name":data[0][1], "email":data[0][2]}
+
+def attraction_booking(email, info):
+    command = "SELECT email FROM trip_booking WHERE email = %s"
+    value = (email, )
+    data = connect_with_database(command, value, False)
+    if(data == []):
+        command = "INSERT INTO trip_booking(email, attractionId, date, time, price) VALUES(%s, %s, %s, %s, %s)"
+        value = (email, info["attractionId"], info["date"], info["time"], info["price"])
+        connect_with_database(command, value, True)
+    else:
+        # replace fuction 
+        command = "UPDATE trip_booking SET attractionId = %s, date = %s, time = %s, price = %s WHERE email = %s"
+        value = (info["attractionId"], info["date"], info["time"], info["price"], email)
+        connect_with_database(command, value, True)
+    
+def get_booking_info(email):
+    command = "SELECT * FROM trip_booking WHERE email = %s"
+    value = (email, )
+    data = connect_with_database(command, value, False)
+    if(data==[]):
+        response = {
+            "data":None
+        }
+    else:
+        attraction_info = get_attraction(data[0][1]).json['data']
+        id = attraction_info['id']
+        name = attraction_info['name']
+        address = attraction_info['address']
+        image = attraction_info['images'][0]
+        response = {
+            "data":{
+                "attraction":{
+                    'id':id,
+                    'name':name,
+                    'address':address,
+                    'image':image
+                },
+                "date":data[0][2],
+                "time":data[0][3],
+                "price":data[0][4]
+            }
+        }
+    return response
+
+def delete_schedule(email):
+    command = "DELETE FROM trip_booking WHERE email = %s"
+    value = (email, )
+    connect_with_database(command, value, True)
+    response = {"ok":True}
+    return response

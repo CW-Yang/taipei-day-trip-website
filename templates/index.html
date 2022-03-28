@@ -377,7 +377,7 @@
                                 },
                             success: function(result){
                                 console.log(result);
-                                if(result['data'] === undefined){
+                                if(result['data'] === null){
                                     state.textContent = "登入/註冊";
                                 }
                                 else{
@@ -388,8 +388,9 @@
                     })
                     flag = true;
                 }
-                
-                
+            }
+            function bookingPage(){
+                location.replace('/booking');
             }
         </script>
     </head>
@@ -413,7 +414,7 @@
         <nav class="sticky" id="nav">
             <div class="top-container">
                 <div class="subject">台北一日遊</div>
-                <div class="frame">預定行程</div>
+                <div class="frame" onclick="bookingPage();">預定行程</div>
                 <div id="state" class="frame" onclick="signin();">登入/註冊</div>
             </div>     
         </nav>
