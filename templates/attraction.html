@@ -77,7 +77,7 @@
 
             function showInfo(){
                 let pictureBox = document.getElementById("pictureBox");
-                let name = document.getElementById("name");
+                let name = document.getElementById("attractionName");
                 let info = document.getElementById("info");
                 let description = document.getElementById("description");
                 let address = document.getElementById("address");
@@ -90,7 +90,8 @@
 
                     radio_btn.setAttribute('type', 'radio');
                     radio_btn.setAttribute('class', 'circle');
-                    radio_btn.setAttribute('id', 'circle'+i.toString())
+                    radio_btn.setAttribute('id', 'circle'+i.toString());
+                    radio_btn.setAttribute('Enabled', 'false');
                     radio_list.appendChild(radio_btn);
                 }
 
@@ -409,7 +410,7 @@
                     </div>
                 </div>
                 <div id="profile">
-                    <div id="name"></div>
+                    <div id="attractionName"></div>
                     <div id="info"></div>
                     <div id="booking-form">
                         <div class="booking-title">訂購導覽行程</div>
