@@ -371,7 +371,22 @@
                 })
             }
             function bookingPage(){
-                location.replace('/booking');
+                $.ajax({
+                            url:"/api/user",
+                            type:"get",
+                            headers :{
+                                    'X-CSRF-TOKEN': getCookie('csrf_access_token'),
+                                },
+                            success: function(result){
+                                if(result['data'] === null){
+                                    signin();
+                                }
+                                else{
+                                    location.replace('/booking');
+                                }
+                            }
+                    })
+                
             }
         </script>
     </head>
