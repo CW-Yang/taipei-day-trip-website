@@ -1,4 +1,4 @@
-import json
+
 from flask import jsonify
 from mysql.connector.pooling import MySQLConnectionPool
 from mysql.connector import errors
