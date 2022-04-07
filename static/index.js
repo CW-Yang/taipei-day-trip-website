@@ -77,10 +77,11 @@ async function getAttractions(url){
             alert("無相關結果");
         }
         Attractions.flag = false;
+        
         makeRequestWithJWT();
     }
 };
-// infinite scrolling
+// infinite sing
 function scroll(){              
     
     const scrollTop = document.documentElement.scrollTop;
@@ -237,7 +238,7 @@ function bookingPage(){
                         signin();
                     }
                     else{
-                        location.replace('/booking');
+                        location.replace('/booking'); // reload()
                     }
                 }
         })

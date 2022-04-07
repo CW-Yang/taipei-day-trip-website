@@ -6,9 +6,9 @@
         <title>預定行程</title>
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='booking.css')}}">
         <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="https://js.tappaysdk.com/tpdirect/v5.9.0"></script>
     </head>
-    <body style="font-family: NotoSansTC-Regular;"onload="makeRequestWithJWT();">
-        <div w3-include-html="content.html"></div>
+    <body style="font-family: NotoSansTC-Regular;"onload="init();">
         <div style="height: 275px;" id="signin_menu" class="menu">
             <div class="member">登入會員帳號<button style="position: absolute; right:10px; width:20px; height: 20px; background-color: transparent; border: none;" onclick="closeMenu();"></button></div>
             <div class="signin"><input id="email" placeholder="輸入電子信箱"/></div>
@@ -80,19 +80,19 @@
             <div class="payment">
                 <div class="payment_title">信用卡付款資訊</div>
                 <div class="field">
-                    <div class="payment_credit_card_id">卡片號碼：  <input type="password" id="input_credit_card_id" placeholder="**** **** **** ****" class="textbox"/></div>
+                    <div class="payment_credit_card_id">卡片號碼：   </div><div style="display: inline-block;" id="card-number" class="textbox"></div>
                 </div>
                 <div class="field">
-                    <div class="payment_credit_card_deadline">過期時間：  <input type="text" id="input_credit_card_deadline" placeholder="MM / YY" class="textbox"></div>
+                    <div class="payment_credit_card_deadline">過期時間：   </div><div style="display: inline-block;" id="card-expiration" class="textbox"></div>
                 </div>
                 <div class="field">
-                    <div class="payment_credit_card_safety_number">驗證號碼：  <input type="text" id="input_credit_card_safety_number" placeholder="CVV" class="textbox"></div>
+                    <div class="payment_credit_card_safety_number">驗證號碼：   </div><div style="display: inline-block;" id="card-ccv" class="textbox"></div>
                 </div>
             </div>
             <hr class="parting-line"/>
             <div class="confirm">
                 <div id="confirm_fee"></div>
-                <button class="booking_confirm">確認訂購並付款</button>
+                <button class="booking_confirm" onclick="getPrime();">確認訂購並付款</button>
             </div>
         </div>
         <div class="footer">COPYRIGHT &copy 2021 台北一日遊</div>

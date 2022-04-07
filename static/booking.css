@@ -175,6 +175,9 @@ nav>.sticky{
 .field{
     height: 40px;
     margin: 15px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
 }
 .contact_form_title{
     font-size: 19px;

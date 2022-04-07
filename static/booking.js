@@ -1,4 +1,53 @@
-function get_user_schedule(user_info){
+class Attraction{
+    constructor(){
+        
+    }
+    parse(data){
+        this.data = data['data'];
+        this.id = this.data['attraction']['id'];
+        this.image = this.data['attraction']['image'];
+        this.name = this.data['attraction']['name'];
+        this.address = this.data['attraction']['address'];
+        this.price = this.data['price'];
+        this.date = this.data['date'];
+        this.time = this.data['time'];
+    }
+}
+class Guest{
+    constructor(){}
+
+    getInfo(data){
+        this.name = data['name'];
+        this.email = data['email'];
+    }
+}
+
+let attraction = new Attraction();
+let buyer = new Guest();
+
+function init(){
+    makeRequestWithJWT();
+    let fields = {
+        number: {
+            element: '#card-number',
+            placeholder: '**** **** **** ****'
+        },
+        expirationDate: {
+            element: document.getElementById('card-expiration'),
+            placeholder: 'MM / YY'
+        },
+        ccv: {
+            element: '#card-ccv',
+            placeholder: 'CCV'
+        }
+    }
+    TPDirect.setupSDK(11327, 'app_whdEWBH8e8Lzy4N6BysVRRMILYORF6UxXbiOFsICkz0J9j1C0JUlCHv1tVJC', 'sandbox');
+    TPDirect.card.setup({
+        fields: fields
+    });
+}
+
+function get_user_schedule(){
     $.ajax({
         url:'/api/booking',
         type:'get',
@@ -7,15 +56,16 @@ function get_user_schedule(user_info){
                     }),
         success: function(result){
             if(result['data'] != null){
-                showInfo(user_info, result);
+                attraction.parse(result);
+                showInfo();
             }
             else{
-                removeElement(user_info);
+                removeElement();
             }
         }
     })
 }
-function removeElement(user_info){
+function removeElement(){
     let box = document.getElementById("box");
     let msg = document.createElement("div");
     let welcome = document.getElementById('headline');
@@ -26,7 +76,7 @@ function removeElement(user_info){
         box.removeChild(child);
         child = box.lastElementChild;
     }
-    welcome.textContent = "您好，"+user_info['name']+"，待預定的行程如下：";
+    welcome.textContent = "您好，"+buyer.name+"，待預定的行程如下：";
     msg.textContent = "目前沒有任何待預定的行程";
     box.appendChild(msg);
 }; 
@@ -48,7 +98,8 @@ async function makeRequestWithJWT() {
                     else{
                         state.textContent = "登出系統";
                         let user_info = result['data'];
-                        get_user_schedule(user_info);
+                        buyer.getInfo(user_info);
+                        get_user_schedule();
                     }
                 }
         })              
@@ -107,7 +158,7 @@ function booking(){
 function bookingPage(){
     location.replace('/booking');
 }
-function showInfo(user_info, data){
+function showInfo(){
     let welcome = document.getElementById('headline');
     let pic = document.getElementById('picture');
     let frame1 = document.getElementById('frame1');
@@ -118,22 +169,21 @@ function showInfo(user_info, data){
     let email = document.getElementById('input_email');
     let confirm_fee = document.getElementById('confirm_fee');
 
-    welcome.textContent = "您好，"+user_info['name']+"，待預定的行程如下：";
-    data = data['data'];
+    welcome.textContent = "您好，"+buyer.name+"，待預定的行程如下：";
 
-    pic.src = data['attraction']['image'];
+    pic.src = attraction.image;
 
-    frame1.textContent = "台北一日遊： "+data['attraction']['name'];
-    frame2.textContent = data['date'];
+    frame1.textContent = "台北一日遊： "+attraction.name;
+    frame2.textContent = attraction.date;
 
-    frame4.textContent = "新台幣 " + data['price'] + " 元";
+    frame4.textContent = "新台幣 " + attraction.price + " 元";
     confirm_fee.textContent = "總價："+frame4.textContent;
 
-    frame5.textContent = data['attraction']['address'];
+    frame5.textContent = attraction.address;
 
-    name.value = user_info['name'];
+    name.value = buyer.name;
 
-    email.value = user_info['email'];
+    email.value = buyer.email;
 }
 function deleteSchedule(){
     $.ajax({
@@ -148,6 +198,93 @@ function deleteSchedule(){
         location.reload();
     })
     .fail(function(result){
+        console.log(result);
+    })
+}
+
+function getOrder(){
+    let result = {
+        "price": Number(attraction.price),
+        "trip":{
+            "attraction":{
+                "id":attraction.id,
+                "name":attraction.name,
+                "address":attraction.address,
+                "image":attraction.image
+            },
+            "date":attraction.date,
+            "time":attraction.time
+        }
+    }
+    return result;
+}
+function getContact(){
+    let number = document.getElementById('input_phone_number').value;
+
+    if(number == '' | number == null){
+        alert('請輸入手機號碼');
+        return null;
+    }
+    else{
+        let result = {
+            "name":buyer.name,
+            "email":buyer.email,
+            "phone":Number(number)
+        }
+        return result;
+    }
+}
+
+function getPrime(){
+    const tappayStatus = TPDirect.card.getTappayFieldsStatus();
+
+    if(tappayStatus.canGetPrime === false){
+        alert('Can not get the prime');
+        return;
+    }
+    TPDirect.card.getPrime(function(result){
+        if(result.status !== 0){
+            console.log('getPrime 錯誤');
+            return;
+        }
+        else{
+            let data = {
+                "prime":result.card.prime,
+                "order":getOrder(),
+                "contact":getContact()
+            }
+            $.ajax({
+                url:'/api/orders',
+                type:'post',
+                headers: new Headers({
+                    'Content-Type':'application/json'
+                }),
+                data:JSON.stringify(data)
+            })
+            .done(function(result){
+                let number;
+                if(result['data'] != undefined){
+                    number = result['data']['number'];
+                }
+                else{
+                    number = result['message']['number'];
+                    alert(result['message']['msg']);
+                }
+                location.replace('/thankyou?number='+number);
+            })
+        }
+    })
+}
+
+function getTradeInfo(data){
+    $.ajax({
+        url:'/api/orders/'+data,
+        type:'get',
+        headers: new Headers({
+            'Content-Type':'application/json'
+        }),
+    })
+    .done(function(result){
         console.log(result);
     })
 }

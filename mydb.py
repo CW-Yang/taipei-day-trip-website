@@ -28,6 +28,8 @@ def connect_with_database(command, value, insert_flag):
         my_cursor.execute(command, value)
         if(insert_flag == True):
             my_connection.commit()
+        
+            
         data_count = my_cursor.rowcount
     except errors.Error as error:
         print(error)
@@ -226,3 +228,31 @@ def delete_schedule(email):
     connect_with_database(command, value, True)
     response = {"ok":True}
     return response
+
+def save_payment_record(data, trade_id, is_success):
+    print(data)
+    if(is_success):
+        command = "UPDATE trip_booking SET status = %s, trade_id = %s, phone = %s WHERE email = %s"
+        value = (0, trade_id, data['phone'], data['email'])
+        connect_with_database(command, value, True)
+    else:
+        command = "UPDATE trip_booking SET trade_id = %s, phone = %s WHERE email = %s"
+        value = (trade_id, data['phone'], data['email'])
+        connect_with_database(command, value, True)
+
+def get_trade_info(trade_id):
+    command = "SELECT * FROM trip_booking WHERE trade_id = %s"
+    value = (trade_id, )
+    data = connect_with_database(command, value, False)
+    if(data != []):
+        return data[0]
+    else:
+        return data
+
+def get_contact(email):
+    data = get_user_info(email)
+    command = "SELECT phone FROM trip_booking WHERE email = %s"
+    value = (email, )
+    phone = connect_with_database(command, value, False)[0]
+    data['phone'] = phone[0]
+    return data
