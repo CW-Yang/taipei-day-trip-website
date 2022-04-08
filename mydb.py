@@ -160,7 +160,6 @@ def is_the_account_exit(email):
     command = 'SELECT * FROM trip_member WHERE email = %s'
     value = (email, )
     data = connect_with_database(command, value, False)
-    print(data)
     if(data != []):
         return True
     return False
@@ -180,33 +179,33 @@ def get_user_info(email):
     return {"id":data[0][0], "name":data[0][1], "email":data[0][2]}
 
 def attraction_booking(email, info):
-    command = "SELECT email FROM trip_booking WHERE email = %s"
+    command = "SELECT email, trade_id FROM trip_booking WHERE email = %s"
     value = (email, )
     data = connect_with_database(command, value, False)
-    if(data == []):
+    print(data)
+    if(data == [] or data[0][1] != None):
         command = "INSERT INTO trip_booking(email, attractionId, date, time, price) VALUES(%s, %s, %s, %s, %s)"
         value = (email, info["attractionId"], info["date"], info["time"], info["price"])
         connect_with_database(command, value, True)
     else:
-        # replace fuction 
         command = "UPDATE trip_booking SET attractionId = %s, date = %s, time = %s, price = %s WHERE email = %s"
         value = (info["attractionId"], info["date"], info["time"], info["price"], email)
         connect_with_database(command, value, True)
 
-def check_status(email):
-    command = "SELECT status FROM trip_booking WHERE email = %s"
-    value = (email, )
-    data = connect_with_database(command, value, False)
-    if(data == []):
-        data = [([],)]
-    return data
+# def check_status(email):
+#     command = "SELECT status FROM trip_booking WHERE email = %s"
+#     value = (email, )
+#     data = connect_with_database(command, value, False)
+
+#     if(data == []):
+#         data = [(2,)]
+#     return data
     
 def get_booking_info(email):
-    status = check_status(email)
-    command = "SELECT * FROM trip_booking WHERE email = %s"
+    command = "SELECT * FROM trip_booking WHERE email = %s AND trade_id is NULL"
     value = (email, )
     data = connect_with_database(command, value, False)
-    if(data==[] or status[0][0] == 0):
+    if(data==[]):
         response = {
             "data":None
         }
@@ -239,13 +238,12 @@ def delete_schedule(email):
     return response
 
 def save_payment_record(data, trade_id, is_success):
-    print(data)
     if(is_success):
-        command = "UPDATE trip_booking SET status = %s, trade_id = %s, phone = %s WHERE email = %s"
+        command = "UPDATE trip_booking SET status = %s, trade_id = %s, phone = %s WHERE email = %s AND trade_id IS NULL"
         value = (0, trade_id, data['phone'], data['email'])
         connect_with_database(command, value, True)
     else:
-        command = "UPDATE trip_booking SET trade_id = %s, phone = %s WHERE email = %s"
+        command = "UPDATE trip_booking SET trade_id = %s, phone = %s WHERE email = %s AND trade_id IS NULL"
         value = (trade_id, data['phone'], data['email'])
         connect_with_database(command, value, True)
 

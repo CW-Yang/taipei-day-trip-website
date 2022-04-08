@@ -84,7 +84,7 @@ def order(orderNumber):
     data = get_trade_info(orderNumber)
     cookie = request.cookies.get('access_token_cookie')
     c = decode_token(cookie)
-    print(c)
+    print(data)
     if(data != []):
         attraction = get_attraction(int(data[1])).json['data']
         user = get_contact(data[0])

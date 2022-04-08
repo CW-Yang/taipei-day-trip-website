@@ -35,7 +35,7 @@ async function login(){
                             location.reload();
                         }
                     }
-                })
+            })
         }   
     
 }
