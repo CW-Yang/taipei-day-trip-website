@@ -265,6 +265,7 @@ function getPrime(){
                 let number;
                 if(result['data'] != undefined){
                     number = result['data']['number'];
+                    // deleteSchedule();
                 }
                 else{
                     number = result['message']['number'];

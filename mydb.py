@@ -192,12 +192,21 @@ def attraction_booking(email, info):
         command = "UPDATE trip_booking SET attractionId = %s, date = %s, time = %s, price = %s WHERE email = %s"
         value = (info["attractionId"], info["date"], info["time"], info["price"], email)
         connect_with_database(command, value, True)
+
+def check_status(email):
+    command = "SELECT status FROM trip_booking WHERE email = %s"
+    value = (email, )
+    data = connect_with_database(command, value, False)
+    if(data == []):
+        data = [(1,)]
+    return data
     
 def get_booking_info(email):
+    status = check_status(email)
     command = "SELECT * FROM trip_booking WHERE email = %s"
     value = (email, )
     data = connect_with_database(command, value, False)
-    if(data==[]):
+    if(data==[] or status[0][0] == 0):
         response = {
             "data":None
         }
