@@ -198,7 +198,7 @@ def check_status(email):
     value = (email, )
     data = connect_with_database(command, value, False)
     if(data == []):
-        data = [(1,)]
+        data = [([],)]
     return data
     
 def get_booking_info(email):
