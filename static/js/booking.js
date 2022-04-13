@@ -231,12 +231,52 @@ function getContact(){
         return result;
     }
 }
+function isUserNameCurrect(userName){
+    if(userName.value == ''){
+        userName.setAttribute("style", "border:solid 1px red");
+        return false
+    }
+    else{
+        userName.setAttribute("style", "border:solid 1px green");
+    }
+    
+    return true;
+}
+function isEmailCurrect(email){
+    let regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+    if(!regex.test(email.value)) {
+        email.setAttribute("style", "border:solid 1px red");
+        return false;
+    }
+    else{
+        email.setAttribute("style", "border:solid 1px green");
+    }
+    return true;
+}
+function isPhoneNumberCurrect(number){
+    if(number.style.border == "1px solid green"){
+        return true;
+    }
+    number.setAttribute("style", "border:solid 1px red");
+    return false;
+}
+
+function checkInformation(){
+    let userName = document.querySelector('#input_name');
+    let email = document.querySelector('#input_email');
+    let phone = document.querySelector('#input_phone_number');
+    
+
+    if(isUserNameCurrect(userName) & isEmailCurrect(email) & isPhoneNumberCurrect(phone)){
+        getPrime();
+    }
+}
 
 function getPrime(){
     const tappayStatus = TPDirect.card.getTappayFieldsStatus();
 
     if(tappayStatus.canGetPrime === false){
-        alert('Can not get the prime');
+        alert('付款資訊有誤');
         return;
     }
     TPDirect.card.getPrime(function(result){
@@ -285,3 +325,32 @@ function getTradeInfo(data){
     .done(function(result){
     })
 }
+
+$('#input_phone_number').bind('input propertychange', function checkFormat(e){
+    let textbox = e.target;
+    let word = textbox.value[textbox.value.length - 1];
+    if(textbox.value.length > 0){
+        if(!isNaN(Number(word))){
+            if(textbox.value.length < 10 | textbox.value.substring(0, 2) != "09"){
+                textbox.setAttribute("style", "border:solid 1px red");
+                if(textbox.value.length > 10){
+                    textbox.value = textbox.value.substring(0, 10);
+                }
+            } 
+            else{
+                textbox.setAttribute("style", "border:solid 1px green");
+                textbox.value = textbox.value.substring(0, 10);
+            }
+        }
+        else{
+            if(textbox.value.length <= 1){
+                textbox.value = '';
+            }
+            else if(textbox.value.length > 1){
+                textbox.value = textbox.value.substring(0, textbox.value.length-1);
+            }
+        }
+    }
+})
+
+

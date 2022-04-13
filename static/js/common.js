@@ -146,3 +146,6 @@ function closeMenu(){
     menu_1.style.display = "none";
     menu_2.style.display = "none";
 } 
+function mainPage(){
+    location.replace('/');
+}

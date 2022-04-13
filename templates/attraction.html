@@ -31,7 +31,7 @@
         <div class="container">
             <nav class="sticky" id="nav">
                 <div class="top-container">
-                    <div class="subject">台北一日遊</div>
+                    <div class="subject" onclick="mainPage();">台北一日遊</div>
                     <div class="frame" onclick="bookingPage();">預定行程</div>
                     <div class="frame" onclick="signin();" id="state">登入/註冊</div>
                 </div>     
@@ -56,8 +56,8 @@
                         <div class="charge">
                             <div class="time">選擇時間 :</div>
                             <div class="radio-options">
-                                <label  id="left_btn" style="display: flex;" onclick="select('morning')"><input type="radio" class="radio_btn" id="btn1"></input><div style="color:#666666; font-size:16px;">上半天</div></label>
-                                <label  id="right_btn" style="display: flex;" onclick="select('afternoon')"><input type="radio" class="radio_btn" id="btn2"></input><div style="color:#666666; font-size:16px;">下半天</div></label>
+                                <label  id="left_btn" style="display: flex;" onclick="select('morning')"><input type="radio" class="radio_btn" id="btn1"></input><div style="color:#666666; font-size:16px; cursor: pointer;">上半天</div></label>
+                                <label  id="right_btn" style="display: flex;" onclick="select('afternoon')"><input type="radio" class="radio_btn" id="btn2"></input><div style="color:#666666; font-size:16px;cursor: pointer;">下半天</div></label>
                             </div>
                         </div>
                         <div class="toll">導覽費用：</div>

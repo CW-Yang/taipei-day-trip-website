@@ -80,6 +80,7 @@ nav>.sticky{
     font-weight: bold;
     margin-right: auto;
     margin-left: 10px;
+    cursor: pointer;
 }
 .frame{
     font-size: 16px;
