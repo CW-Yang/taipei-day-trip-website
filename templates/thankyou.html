@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <meta charset="utf-8" />
         <title>Thank you</title>
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='thankyou.css')}}">
+        <link rel="stylesheet" type="text/css" href="../static/css/thankyou.css">
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script>
             function init(){
@@ -42,7 +42,6 @@
                         status.textContent = '';
                         fee.textContent = '';
                     }
-                    console.log(result);
                 })
             }
             async function makeRequestWithJWT() {
@@ -82,7 +81,6 @@
             function bookingPage(){
                 location.replace('/booking');
             }
-            
         </script>
     </head>
     <body style="font-family: NotoSansTC-Regular;"onload="makeRequestWithJWT();">
@@ -117,6 +115,6 @@
             <div id="status"></div>
         </div>
         <div class="footer">COPYRIGHT &copy 2021 台北一日遊</div>
-        <script src="{{ url_for('static', filename='common.js') }}"></script>
+        <script src="../static/js/common.js"></script>
     </body>
 </html>

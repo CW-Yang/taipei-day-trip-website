@@ -88,7 +88,6 @@ def api_booking():
 			if(date < today):
 				msg = "日期資訊有誤"
 				response = {"error":True, "message":msg}
-
 			else:
 				cookie = request.cookies.get('access_token_cookie')
 				if(cookie == None):
@@ -102,12 +101,12 @@ def api_booking():
 		return jsonify(response)
 	elif(request.method == 'GET'):
 		cookie = request.cookies.get('access_token_cookie')
+		
 		if(cookie != None):
 			email = decode_token(cookie)['sub']
 			response = get_booking_info(email)
 		else:
 			response = {"error":True, "message":"尚未登入"}
-
 	else:
 		cookie = request.cookies.get('access_token_cookie')
 		email = decode_token(cookie)['sub']

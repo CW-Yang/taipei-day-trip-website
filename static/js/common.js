@@ -93,7 +93,6 @@ function changeMenu(current_menu){
     signup = document.getElementById("signup_menu");
 
     if(current_menu == 'signin'){
-        
         signin.style.display = "none";
         signup.style.display = "block";
     }

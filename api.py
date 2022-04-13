@@ -1,11 +1,12 @@
 import json
 import requests
 import datetime
-from flask import Blueprint, jsonify, redirect, request, url_for
+from flask import Blueprint, jsonify, request
 from mydb import get_attraction, get_attractions, get_error_message, save_payment_record, get_trade_info, get_contact
-from flask_jwt_extended import create_access_token, decode_token
+from flask_jwt_extended import decode_token
+import os
 
-
+partner_key = os.getenv('PARTNER_KEY')
 
 
 app2 = Blueprint('app2', __name__)
@@ -39,7 +40,7 @@ def payment():
         data = eval(request.get_data())
         tappay_request = {
             "prime":data['prime'],
-            "partner_key": "partner_6ID1DoDlaPrfHw6HBZsULfTYtDmWs0q0ZZGKMBpp4YICWBxgK97eK3RM",
+            "partner_key": partner_key,
             "merchant_id": "GlobalTesting_CTBC",
             "amount": 1,
             "currency": "TWD",
@@ -53,7 +54,7 @@ def payment():
         }
         tappay_request = json.dumps(tappay_request)
         headers = {
-            'x-api-key':"partner_6ID1DoDlaPrfHw6HBZsULfTYtDmWs0q0ZZGKMBpp4YICWBxgK97eK3RM",
+            'x-api-key':partner_key,
             'content-type':'application/json'
         }
         res = requests.post('https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime', data=tappay_request, headers=headers)

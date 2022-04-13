@@ -1,7 +1,5 @@
 class Attraction{
-    constructor(){
-        
-    }
+    constructor(){}
     parse(data){
         this.data = data['data'];
         this.id = this.data['attraction']['id'];
@@ -81,8 +79,9 @@ function removeElement(){
     box.appendChild(msg);
 }; 
 
-async function makeRequestWithJWT() {
+async function makeRequestWithJWT(){
         let state = document.getElementById("state");
+        
         $.ajax({
                 url:"/api/user",
                 type:"get",
@@ -109,7 +108,6 @@ async function makeRequestWithJWT() {
         })
 }   
 function booking(){
-    
     let fee = document.getElementById("fee");
     let price, during, date;
     date = document.getElementById("date").value;
@@ -220,7 +218,6 @@ function getOrder(){
 }
 function getContact(){
     let number = document.getElementById('input_phone_number').value;
-
     if(number == '' | number == null){
         alert('請輸入手機號碼');
         return null;
@@ -286,6 +283,5 @@ function getTradeInfo(data){
         }),
     })
     .done(function(result){
-        console.log(result);
     })
 }
