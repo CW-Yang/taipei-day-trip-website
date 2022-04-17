@@ -80,6 +80,7 @@ nav>.sticky{
     font-weight: bold;
     margin-right: auto;
     margin-left: 10px;
+    cursor: pointer;
 }
 .frame{
     font-size: 16px;
@@ -175,6 +176,9 @@ nav>.sticky{
 .field{
     height: 40px;
     margin: 15px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
 }
 .contact_form_title{
     font-size: 19px;
@@ -231,6 +235,10 @@ nav>.sticky{
     background-color: #448899;
     border: none;
     border-radius: 8px;
+    cursor: pointer;
+}
+#input_phone_number{
+    outline: none;
 }
 @font-face{
     font-family: 'NotoSansTC-Regular';

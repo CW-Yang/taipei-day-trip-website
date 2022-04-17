@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta charset="utf-8" />
+        <title>Thank you</title>
+        <link rel="stylesheet" type="text/css" href="../static/css/thankyou.css">
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script>
+            function init(){
+                let string = location.href;
+                let startIndex = string.search('=')+1;
+                let endIndex = string.length;
+                let number = string.substring(startIndex, endIndex);
+                let message = document.getElementById('message');
+                let status = document.getElementById('status');
+                let fee = document.getElementById('fee');
+                $.ajax({
+                    url:'/api/orders/'+number,
+                    type:'get',
+                    headers: new Headers({
+                        'Content-Type':'application/json'
+                    }),
+                })
+                .done(function(result){
+                    if(result['error'] != true){
+                        if(result['status'] == 0){
+                            // success
+                            message.textContent = '訂單編號：'+number;
+                            status.textContent = '狀態：已付款';
+                            fee.textContent = '總金額 (TWD)：'+result['data']['price'];
+                        }
+                        else{
+                            // yet
+                            message.textContent = '訂單編號：'+number;
+                            status.textContent = '狀態：尚未付款'
+                            fee.textContent = '總金額 (TWD)：'+result['data']['price'];
+                        }
+                    }
+                    else{
+                        message.textContent = result['message'];
+                        status.textContent = '';
+                        fee.textContent = '';
+                    }
+                })
+            }
+            async function makeRequestWithJWT() {
+                let state = document.getElementById("state");
+                let message = document.getElementById('message');
+                let status = document.getElementById('status');
+                let fee = document.getElementById('fee');
+                $.ajax({
+                        url:"/api/user",
+                        type:"get",
+                        headers :{
+                                'X-CSRF-TOKEN': getCookie('csrf_access_token'),
+                            },
+                        success: function(result){
+                            console.log(result);
+                            if(result['data'] === null){
+                                state.textContent = "登入/註冊";
+                                // location.replace('/');
+                                message.textContent = "請先登入後再進行操作";
+                                status.textContent = '';
+                                fee.textContent = '';
+                            }
+                            else{
+                                state.textContent = "登出系統";
+                                init();
+                            }
+                        }
+                })              
+                .fail(function(){
+                    state.textContent = "登入/註冊";
+                    message.textContent = "請先登入後再進行操作";
+                    status.textContent = '';
+                    fee.textContent = '';
+                    // location.replace('/');
+                })
+            }   
+            function bookingPage(){
+                location.replace('/booking');
+            }
+            
+        </script>
+    </head>
+    <body style="font-family: NotoSansTC-Regular;"onload="makeRequestWithJWT();">
+        <div style="height: 275px;" id="signin_menu" class="menu">
+            <div class="member">登入會員帳號<button style="position: absolute; right:10px; width:20px; height: 20px; background-color: transparent; border: none;" onclick="closeMenu();"></button></div>
+            <div class="signin"><input id="email" placeholder="輸入電子信箱"/></div>
+            <div class="signin"><input type="password" id="password" placeholder="輸入密碼"/></div>
+            <div class="signin"><button onclick="login();">登入帳戶</button></div>
+            <div style="color:#666666; margin:10px; text-align: center; cursor: pointer;" id="signin_tip" onclick="changeMenu('signin');">還沒有帳戶？點此註冊</div>   
+        </div>
+        <div style="height: 334px; display: none;" id="signup_menu" class="menu">
+            <div class="member">註冊會員帳號<button style="position: absolute; right:10px; width:20px; height: 20px; background-color: transparent; border: none;" onclick="closeMenu();"></button></div>
+            <div class="signin"><input id="name" placeholder="輸入姓名"/></div>
+            <div class="signin"><input id="unsign_email" placeholder="輸入電子郵件"/></div>
+            <div class="signin"><input type="password" id="unsign_password" placeholder="輸入密碼"/></div>
+            <div class="signin"><button onclick="signUp();">註冊新帳戶</button></div>
+            <div style="color:#666666; text-align: center; margin:10px; cursor: pointer;" id="signup_tip" onclick="changeMenu('signup');">已經有帳戶了？點此登入</div> 
+        </div>
+        <div id="cover"></div>
+        <div class="container">
+            <nav class="sticky" id="nav">
+                <div class="top-container">
+                    <div class="subject" onclick="mainPage();">台北一日遊</div>
+                    <div class="frame" onclick="bookingPage();">預定行程</div>
+                    <div class="frame" onclick="signin();" id="state">登入/註冊</div>
+                </div>     
+            </nav>
+        </div>
+        <div style="height: 100px;">
+            <div id="message"></div>
+            <div id="fee"></div>
+            <div id="status"></div>
+        </div>
+        <div class="footer">COPYRIGHT &copy 2021 台北一日遊</div>
+        <script src="../static/js/common.js"></script>
+    </body>
+</html>

@@ -1,0 +1,147 @@
+.cover{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(112, 112, 112, .5);
+    z-index: 2;
+}
+.number{
+    display: none;
+}
+.menu{
+    position: fixed;
+    top: 80px;
+    left: 0; 
+    right: 0; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 340px;
+    background-color: white;
+    z-index: 3;
+    display: none;
+}
+.member{
+    text-align: center; margin: 10px; font-weight: 700; color:#666666; letter-spacing: 1px;
+    background-image: url("icon_close.png");
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+    background-position: right top;
+}
+.signin{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    
+}
+.signin input{
+    width:298px; height: 35px; padding: 6px;
+    border: groove aaa7a7;
+    color: #666666;
+}
+.signin button{
+    background-color: #448899;
+    color: white;
+    width: 310px;
+    height: 47px;
+    border: none;
+}
+.container{
+    display:flex; 
+    flex-wrap: wrap; 
+    width:auto; 
+    margin-left: auto; 
+    margin-right: auto; 
+    align-items: center; 
+    justify-content: center;
+}
+nav{
+    width:100%; height: 44px;
+    background-color: white;
+    z-index: 1;
+    margin-bottom: 37px;
+}
+nav>.sticky{
+    position: sticky;
+    top: 0px;
+}
+.top-container{
+    margin: 0px auto;
+    display: flex;
+    width:1200px;
+    justify-content: center;
+    align-items: center;
+}
+.subject{
+    color:#448899;
+    font-size:30px;
+    font-weight: bold;
+    margin-right: auto;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.frame{
+    font-size: 16px;
+    color: #666666;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+#message{
+    color:#666666;
+    font-size: 20px;
+    text-align: center;
+    line-height: 60px;
+}
+#status{
+    color:#666666;
+    font-size: 20px;
+    text-align: center;
+    line-height: 30px;
+}
+#fee{
+    color:#666666;
+    font-size: 20px;
+    text-align: center;
+    line-height: 30px;
+}
+
+@font-face{
+    font-family: 'NotoSansTC-Regular';
+    src:url("NotoSansTC-Regular.otf")
+}
+@media (max-width:1200px){
+   
+    .top-container{
+        width:100%;
+    }
+    .container{
+        width:100%;
+        height: 100%;
+    }
+    nav{
+        width: 100%;
+    }
+    
+    .parting-line{
+        width:100%;
+    }
+}
+.footer{
+    font-weight: 700;
+    width: 100%;
+    height: 104px;
+    background-color: #757575;
+    color: white;
+    text-align: center;
+    line-height: 104px;
+    margin-top: 50px;
+    margin-bottom: auto;
+}
+.message{
+    color: #666666;
+    font-size: 16px;
+    text-align: center;
+}
